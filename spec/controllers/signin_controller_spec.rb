@@ -7,7 +7,6 @@ RSpec.describe SigninController, type: :controller do
     let(:user_params) { { email: user.email, password: password } }
 
     it 'returns http success' do
-      puts "BBBBBBBBBBBBBBBB#{user_params}"
       post :create, params: user_params
       expect(response).to be_successful
       expect(response_json.keys).to eq ['csrf']

@@ -3,14 +3,14 @@ class SigninController < ApplicationController
 
   def create
     user  = User.find_by!(email: params[:email])
-    puts "AAAAAAAAAAAAAAAAAAa#{params[:password]}"
+
     if user.authenticate(params[:password])
       payload = { user_id: user.id }
-      session = JWTSessions:Session.new(payload: payload, refresh_by_access_allowed: true)
+      session = JWTSessions::Session.new(payload: payload, refresh_by_access_allowed: true)
       token = session.login
-      response.set_cookie(JWTSessions:Session.access_cookie,
+      response.set_cookie(JWTSessions.access_cookie,
                           value: token[:access],
-                          httponly: only,
+                          httponly: true,
                           secure: Rails.env.production?)
       
       render json: { csrf: token[:csrf] }
