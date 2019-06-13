@@ -1,8 +1,5 @@
 <template>
   <div class="todos">
-    <div class="sign-out float-right">
-      <label @click="signOut">Sign out</label>
-    </div>
     <div class="alert alert-danger" v-if="error">{{ error }}</div>
     <h3>Todos</h3>
     <input class="form-control"
@@ -27,6 +24,9 @@
         </div>
       </li>
     </ul>
+    <div class="sign-out float-right">
+      <label @click="signOut">Sign out</label>
+    </div>
   </div>
 </template>
 
