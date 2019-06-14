@@ -5,7 +5,7 @@ class SigninController < ApplicationController
     user  = User.find_by!(email: params[:email])
 
     if user.authenticate(params[:password])
-      payload = { user_id: user.id }
+      payload = { user_id: user.id, aud: [user.role] }
       session = JWTSessions::Session.new(payload: payload, refresh_by_access_allowed: true)
       token = session.login
       response.set_cookie(JWTSessions.access_cookie,
