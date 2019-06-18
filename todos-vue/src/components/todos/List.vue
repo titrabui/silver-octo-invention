@@ -1,5 +1,6 @@
 <template>
   <div class="todos">
+    <AppHeader></AppHeader>
     <div class="alert alert-danger" v-if="error">{{ error }}</div>
     <h3>Todos</h3>
     <input class="form-control"
@@ -24,15 +25,16 @@
         </div>
       </li>
     </ul>
-    <div class="sign-out float-right">
-      <label @click="signOut">Sign out</label>
-    </div>
   </div>
 </template>
 
 <script>
+
+import AppHeader from '@/components/AppHeader'
+
 export default {
   name: 'List',
+  components: { AppHeader },
   data () {
     return {
       todos: [],
@@ -42,7 +44,7 @@ export default {
     }
   },
   created () {
-    if (!localStorage.signedIn) {
+    if (!this.$store.state.signedIn) {
       this.$router.replace('/')
     } else {
       this.$http.secured.get('/todos')
@@ -83,8 +85,7 @@ export default {
     },
     signOut () {
       this.$http.secured.delete('/signin').then(response => {
-        delete localStorage.csrf
-        delete localStorage.signedIn
+        this.$store.commit('unsetCurrentUser')
         this.$router.replace('/')
       }).catch(error => this.setError(error, 'Cannot sign out'))
     }
