@@ -1,4 +1,6 @@
 class SignupController < ApplicationController
+  KEYS = [:email, :password, :password_confirmation].freeze
+
   def create
     user = User.new(user_params)
 
@@ -13,13 +15,14 @@ class SignupController < ApplicationController
                           secure: Rails.env.production?)
       render json: { csrf: tokens[:csrf] }
     else
-      render json: { error: user.errors.full_messages.join(' ') }, status: :unprocessable_entity
+      render json: { error: user.errors.full_messages.join(' ') },
+             status: :unprocessable_entity
     end
   end
 
   private
 
   def user_params
-    params.permit(:email, :password, :password_confirmation)
+    params.tap { |p| p.require(KEYS) }.permit(*KEYS)
   end
 end
