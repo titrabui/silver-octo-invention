@@ -15,6 +15,9 @@ export const store = new Vuex.Store({
     },
     isManager (state) {
       return state.currentUser && state.currentUser.role === 'manager'
+    },
+    currentUserId (state) {
+      return state.currentUser && state.currentUser.id
     }
   },
   mutations: {
@@ -27,10 +30,6 @@ export const store = new Vuex.Store({
       state.currentUser = {}
       state.signedIn = false
       state.csrf = null
-    },
-    refresh (state, csrf) {
-      state.signedIn = true
-      state.csrf = csrf
     }
   },
   plugins: [createPersistedState()]

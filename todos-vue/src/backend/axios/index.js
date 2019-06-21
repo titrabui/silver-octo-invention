@@ -35,7 +35,9 @@ securedAxiosInstance.interceptors.response.use(null, error => {
     // In case 401 is caused by expired access cookie - we'll do refresh request
     return plainAxiosInstance.post('/refresh', {}, { headers: { 'X-CSRF-TOKEN': store.state.csrf } })
       .then(response => {
-        store.commit('refresh', response.data.csrf)
+        // request new users info
+        plainAxiosInstance.get('/me')
+          .then(meResponse => store.commit('setCurrentUser', { currentUser: meResponse.data, csrf: response.data.csrf }))
         // And after successful refresh - repeat the original request
         let retryConfig = error.response.config
         retryConfig.headers['X-CSRF-TOKEN'] = store.state.csrf
