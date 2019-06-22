@@ -12,6 +12,8 @@
     <button type="submit" class="btn btn-primary mb-3">Sign in</button>
     <div>
       <router-link to="/signup">Sign up</router-link>
+      <br />
+      <router-link to="/forgot_password">Forgot Password</router-link>
     </div>
   </form>
 </template>
@@ -43,18 +45,19 @@ export default {
         this.signinFailed(response)
         return
       }
-      localStorage.csrf = response.data.csrf
-      localStorage.signedIn = true
-      this.error = ''
-      this.$router.replace('/todos')
+
+      this.$http.plain.get('/me').then(meResponse => {
+        this.$store.commit('setCurrentUser', { currentUser: meResponse.data, csrf: response.data.csrf })
+        this.error = ''
+        this.$router.replace('/todos')
+      }).catch(error => this.signinFailed(error))
     },
     signinFailed (error) {
       this.error = (error.response && error.response.data && error.response.data.error) || ''
-      delete localStorage.csrf
-      delete localStorage.signedIn
+      this.$store.commit('unsetCurrentUser')
     },
     checkSignedIn () {
-      if (localStorage.signedIn) {
+      if (this.$store.state.signedIn) {
         this.$router.replace('/todos')
       }
     }

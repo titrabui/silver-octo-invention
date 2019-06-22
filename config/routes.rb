@@ -6,5 +6,18 @@ Rails.application.routes.draw do
   post 'signup', controller: :signup, action: :create
   delete 'signin', controller: :signin, action: :destroy
 
+  get 'me', controller: :users, action: :me
+
   resources :todos
+
+  namespace :admin do
+    resources :users, only: [:index]
+  end
+
+  resources :password_resets, only: [:create] do
+    collection do
+      get ':token', action: :edit, as: :edit
+      patch ':token', action: :update
+    end
+  end
 end
