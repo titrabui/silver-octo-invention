@@ -1,6 +1,5 @@
 <template>
   <div class="users">
-    <AppHeader></AppHeader>
     <div class="alert alert-danger" v-if="error">{{ error }}</div>
     <h3>User Todos</h3>
     <br />
@@ -24,7 +23,6 @@
 </template>
 
 <script>
-import AppHeader from '@/components/AppHeader'
 
 export default {
   name: 'UserTodosList',
@@ -47,7 +45,6 @@ export default {
     setError (error, text) {
       this.error = (error.response && error.response.data && error.response.data.error) || text
     }
-  },
-  components: { AppHeader }
+  }
 }
 </script>

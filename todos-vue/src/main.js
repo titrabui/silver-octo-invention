@@ -6,12 +6,15 @@ import router from './router'
 import { store } from './store'
 import VueAxios from 'vue-axios'
 import { securedAxiosInstance, plainAxiosInstance } from './backend/axios'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 
 Vue.config.productionTip = false
 Vue.use(VueAxios, {
   secured: securedAxiosInstance,
   plain: plainAxiosInstance
 })
+Vue.use(ElementUI, { size: 'small', zIndex: 3000 })
 
 /* eslint-disable no-new */
 new Vue({
