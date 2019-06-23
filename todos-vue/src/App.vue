@@ -1,17 +1,17 @@
 <template>
   <el-container>
-    <el-header>
+    <el-header style="border-bottom: 1px solid #ced4da">
       <AppHeader></AppHeader>
     </el-header>
     <el-container>
-      <el-aside v-if="showSideBarMenu()" width="auto" max-width="200px">
-        <AppSideBar></AppSideBar>
-      </el-aside>
       <el-container>
         <el-main>
           <router-view></router-view>
         </el-main>
       </el-container>
+      <!-- <el-aside>
+        <AppSideBar></AppSideBar>
+      </el-aside> -->
     </el-container>
   </el-container>
 </template>
