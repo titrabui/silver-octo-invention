@@ -1,6 +1,5 @@
 <template>
   <div class="users">
-    <AppHeader></AppHeader>
     <form class="form-app form-edit" @submit.prevent="update">
       <div class="alert alert-info" v-if="notice">{{ notice }}</div>
       <div class="alert alert-danger" v-if="error">{{ error }}</div>
@@ -23,7 +22,6 @@
 </template>
 
 <script>
-import AppHeader from '@/components/AppHeader'
 
 export default {
   name: 'UserEdit',
@@ -70,7 +68,6 @@ export default {
         this.$router.replace('/')
       }
     }
-  },
-  components: { AppHeader }
+  }
 }
 </script>

@@ -1,21 +1,45 @@
 <template>
-  <form class="form-signin" @submit.prevent="signin">
-    <div class="alert alert-danger" v-if="error">{{ error }}</div>
-    <div class="form-group">
-      <label for="email">Email address</label>
-      <input v-model="email" type="email" class="form-control" id="email" placeholder="email@example.com">
-    </div>
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input v-model="password" type="password" class="form-control" id="password" placeholder="Password">
-    </div>
-    <button type="submit" class="btn btn-primary mb-3">Sign in</button>
-    <div>
-      <router-link to="/signup">Sign up</router-link>
-      <br />
-      <router-link to="/forgot_password">Forgot Password</router-link>
-    </div>
-  </form>
+  <el-row>
+    <el-row class="banner-image">
+      <img style="width: 100%; height: auto;" src="@/assets/images/banner_1.jpg">
+    </el-row>
+    <el-row class="page-title">
+      <span>Sign In</span>
+    </el-row>
+    <el-row :gutter="20">
+      <el-col :span="6" :offset="9" class="signin-form">
+        <el-alert
+          v-if="error"
+          :title="error"
+          type="error"
+          effect="dark"
+          center
+          :closable=false>
+        </el-alert>
+        <el-form label-position="top" label-width="100px" size="large" >
+          <el-form-item label="Email address">
+            <el-input placeholder="Please input email" v-model="email"></el-input>
+          </el-form-item>
+          <el-form-item label="Password">
+            <el-input placeholder="Please input password" v-model="password" show-password></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" style="width: 100%" round @click="signin()">Sign In</el-button>
+          </el-form-item>
+          <el-form-item>
+            <el-row :gutter="10">
+              <el-col :span="12">
+                <router-link to="/forgot_password">Forgot Password?</router-link>
+              </el-col>
+              <el-col :span="12" style="text-align: right">
+                <router-link to="/signup">SIGN UP</router-link>
+              </el-col>
+            </el-row>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+  </el-row>
 </template>
 
 <script>
@@ -50,6 +74,12 @@ export default {
         this.$store.commit('setCurrentUser', { currentUser: meResponse.data, csrf: response.data.csrf })
         this.error = ''
         this.$router.replace('/todos')
+        this.$notify({
+          title: 'Login successful',
+          message: 'You loged in successful',
+          type: 'success',
+          duration: 2000
+        })
       }).catch(error => this.signinFailed(error))
     },
     signinFailed (error) {
@@ -66,10 +96,22 @@ export default {
 </script>
 
 <style lang="css">
-.form-signin {
-  width: 70%;
-  max-width: 500px;
-  padding: 10% 15px;
-  margin: 0 auto;
+.signin-form {
+  padding: 20px 20px 0 !important;
+  border: dashed 1px #409EFF;
+  border-radius: 5px;
+  margin-top: 20px;
+  background-color: #F2F6FC;
+}
+
+.banner-image {
+  margin: -19px -20px 30px;
+}
+
+.page-title {
+  text-align: center;
+  font-weight: 500;
+  font-size: 25px;
+  color: #409EFF;
 }
 </style>

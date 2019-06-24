@@ -1,6 +1,5 @@
 <template>
   <div class="todos">
-    <AppHeader></AppHeader>
     <div class="alert alert-danger" v-if="error">{{ error }}</div>
     <h3>Todos</h3>
     <input class="form-control"
@@ -30,11 +29,8 @@
 
 <script>
 
-import AppHeader from '@/components/AppHeader'
-
 export default {
   name: 'List',
-  components: { AppHeader },
   data () {
     return {
       todos: [],

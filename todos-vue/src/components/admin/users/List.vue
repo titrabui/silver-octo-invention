@@ -1,6 +1,5 @@
 <template>
   <div class="users">
-    <AppHeader></AppHeader>
     <div class="alert alert-danger" v-if="error">{{ error }}</div>
     <h3>Users</h3>
     <br />
@@ -37,7 +36,6 @@
 </template>
 
 <script>
-import AppHeader from '@/components/AppHeader'
 
 export default {
   name: 'UsersList',
@@ -66,7 +64,6 @@ export default {
     showUsersLink (user) {
       return this.$store.getters.isAdmin && this.$store.getters.currentUserId !== user.id
     }
-  },
-  components: { AppHeader }
+  }
 }
 </script>
