@@ -8,15 +8,23 @@
     </el-row>
     <el-row :gutter="20">
       <el-col :span="6" :offset="9" class="signin-form">
-        <el-form label-position="top" label-width="100px">
+        <el-alert
+          v-if="error"
+          :title="error"
+          type="error"
+          effect="dark"
+          center
+          :closable=false>
+        </el-alert>
+        <el-form label-position="top" label-width="100px" size="large" >
           <el-form-item label="Email address">
-            <el-input size="large" v-model="email"></el-input>
+            <el-input placeholder="Please input email" v-model="email"></el-input>
           </el-form-item>
           <el-form-item label="Password">
-            <el-input size="large" v-model="password"></el-input>
+            <el-input placeholder="Please input password" v-model="password" show-password></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="large" style="width: 100%" round @click="signin()">Sign In</el-button>
+            <el-button type="primary" style="width: 100%" round @click="signin()">Sign In</el-button>
           </el-form-item>
           <el-form-item>
             <el-row :gutter="10">
@@ -66,6 +74,12 @@ export default {
         this.$store.commit('setCurrentUser', { currentUser: meResponse.data, csrf: response.data.csrf })
         this.error = ''
         this.$router.replace('/todos')
+        this.$notify({
+          title: 'Login successful',
+          message: 'You loged in successful',
+          type: 'success',
+          duration: 2000
+        })
       }).catch(error => this.signinFailed(error))
     },
     signinFailed (error) {

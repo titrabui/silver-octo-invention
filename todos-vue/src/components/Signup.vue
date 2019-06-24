@@ -1,23 +1,28 @@
-<template>
-  <form class="form-signup" @submit.prevent="signup">
-    <div class="alert alert-danger" v-if="error">{{ error }}</div>
-    <div class="form-group">
-      <label for="email">Email address</label>
-      <input v-model="email" type="email" class="form-control" id="email" placeholder="email@example.com">
-    </div>
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input v-model="password" type="password" class="form-control" id="password" placeholder="Password">
-    </div>
-    <div class="form-group">
-      <label for="password">Password Confirmation</label>
-      <input v-model="password_confirmation" type="password" class="form-control" id="password_confirmation" placeholder="Password Confirmation">
-    </div>
-    <button type="submit" class="btn btn-primary mb-3">Sign up</button>
-    <div>
-      <router-link to="/">Sign in</router-link>
-    </div>
-  </form>
+<template lang="pug">
+  el-row
+    el-row.banner-image
+      img(style="width: 100%; height: auto;" src="@/assets/images/banner_2.jpg")
+    el-row.page-title
+      span Sign Up
+    el-row(:gutter="20")
+      el-col.signin-form(:span="6" :offset="9")
+        el-alert(
+          v-if="error"
+          :title="error"
+          type="error"
+          effect="dark"
+          center
+          :closable=false
+        )
+        el-form(label-position="top" label-width="100px" size="large")
+          el-form-item(label="Email address")
+            el-input(placeholder="Please input email" v-model="email")
+          el-form-item(label="Password")
+            el-input(placeholder="Please input password" v-model="password" show-password)
+          el-form-item(label="Password Confirmation")
+            el-input(placeholder="Please input confirm password" v-model="password_confirmation" show-password)
+          el-form-item
+            el-button(type="primary" style="width: 100%" round @click="signup()") Sign Up
 </template>
 
 <script>
@@ -53,6 +58,12 @@ export default {
         this.$store.commit('setCurrentUser', { currentUser: meResponse.data, csrf: response.data.csrf })
         this.error = ''
         this.$router.replace('/todos')
+        this.$notify({
+          title: 'Sign up successful',
+          message: 'You signed up and loged in successful',
+          type: 'success',
+          duration: 2000
+        })
       }).catch(error => this.signinFailed(error))
     },
     signupFailed (error) {
