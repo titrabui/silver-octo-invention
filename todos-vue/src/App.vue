@@ -4,7 +4,7 @@
       <AppHeader></AppHeader>
     </el-header>
     <el-container>
-      <el-container>
+      <el-container style="background-color: #eee">
         <el-main>
           <router-view></router-view>
         </el-main>
