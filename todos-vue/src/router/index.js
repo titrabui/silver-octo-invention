@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import { store } from './../store'
+import { Notification } from 'element-ui'
 import Signin from '@/components/Signin'
 import Signup from '@/components/Signup'
 import TodosList from '@/components/todos/List'
@@ -10,10 +12,11 @@ import ResetPassword from '@/components/ResetPassword'
 import UserEdit from '@/components/admin/users/Edit'
 import PostsList from '@/components/posts/List'
 import PostDetail from '@/components/posts/Detail'
+import PostCreate from '@/components/posts/Create'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/signin',
@@ -64,6 +67,35 @@ export default new Router({
       path: '/news/:id',
       name: 'PostDetail',
       component: PostDetail
+    },
+    {
+      path: '/news-create',
+      name: 'PostCreate',
+      component: PostCreate,
+      meta: { requiresAuth: true }
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!store.state.signedIn) {
+      next({
+        path: '/signin',
+        query: { redirect: to.fullPath }
+      })
+      Notification({
+        title: 'Login required',
+        message: 'Please log in to do this',
+        type: 'warning',
+        duration: 2000
+      })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+})
+
+export default router

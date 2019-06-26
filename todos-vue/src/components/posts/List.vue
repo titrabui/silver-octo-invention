@@ -50,7 +50,7 @@ export default {
 }
 </script>
 
-<style lang="css">
+<style lang="css" scoped>
 .box-card {
   margin-bottom: 15px;
 }

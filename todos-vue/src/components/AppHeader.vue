@@ -19,10 +19,10 @@
     </ul>
     <ul class="navbar ml-auto">
       <li class="nav-item">
-        <el-button v-if="!isSignedIn" @click="redirectToPage('signin')" icon="el-icon-thumb" round>Log In</el-button>
-        <el-button v-if="!isSignedIn" @click="redirectToPage('signup')" type="primary" icon="el-icon-position" round>Sign Up</el-button>
+        <el-button v-if="!isSignedIn" @click="redirectToPage('signin')" icon="el-icon-thumb" round>LOG IN</el-button>
+        <el-button v-if="!isSignedIn" @click="redirectToPage('signup')" type="primary" icon="el-icon-position" round>SIGN UP</el-button>
         <el-tooltip v-if="isSignedIn" content="Create Post" placement="bottom">
-          <el-button type="warning" icon="el-icon-edit" round>Create post</el-button>
+          <el-button type="warning" icon="el-icon-edit" @click="redirectToPage('news-create')" round>Create post</el-button>
         </el-tooltip>
         <el-dropdown @command="handleCommand" style="margin-left: 10px; vertical-align: middle;">
           <el-button v-bind:class="{ 'dropdown-signedin': isSignedIn }" round>
