@@ -2,7 +2,7 @@
   <nav class="navbar rounded" style="padding: 0.2rem 1rem">
     <ul class="navbar">
       <li class="nav-item home">
-        <router-link class="nav-link" to="/todos">
+        <router-link class="nav-link" to="/">
           <img src="@/assets/images/logo.png" height="40"/>
         </router-link>
       </li>
@@ -21,8 +21,8 @@
       <li class="nav-item">
         <el-button v-if="!isSignedIn" @click="redirectToPage('signin')" icon="el-icon-thumb" round>LOG IN</el-button>
         <el-button v-if="!isSignedIn" @click="redirectToPage('signup')" type="primary" icon="el-icon-position" round>SIGN UP</el-button>
-        <el-tooltip v-if="isSignedIn" content="Create Post" placement="bottom">
-          <el-button type="warning" icon="el-icon-edit" @click="redirectToPage('news-create')" round>Create post</el-button>
+        <el-tooltip v-if="isSignedIn" content="Create news" placement="bottom">
+          <el-button type="success" icon="el-icon-edit" @click="redirectToPage('news-create')" round>Create news</el-button>
         </el-tooltip>
         <el-dropdown @command="handleCommand" style="margin-left: 10px; vertical-align: middle;">
           <el-button v-bind:class="{ 'dropdown-signedin': isSignedIn }" round>
@@ -42,7 +42,7 @@
             <el-dropdown-item command="signin" icon="el-icon-thumb">Log In / Sign Up</el-dropdown-item>
           </el-dropdown-menu>
           <el-dropdown-menu slot="dropdown" v-if="isSignedIn">
-            <el-dropdown-item command="posts" icon="el-icon-platform-eleme">News Management</el-dropdown-item>
+            <el-dropdown-item command="news-manage" icon="el-icon-platform-eleme">News Management</el-dropdown-item>
             <el-dropdown-item command="users" icon="el-icon-user-solid">Users Management</el-dropdown-item>
             <el-dropdown-item command="setting" icon="el-icon-s-tools">Profile Settings</el-dropdown-item>
             <el-dropdown-item command="signout" icon="el-icon-back">Log Out</el-dropdown-item>
@@ -92,7 +92,7 @@ export default {
     handleCommand (command) {
       if (command === 'signout') {
         this.signOut()
-      } else if (command === 'signin') {
+      } else {
         this.redirectToPage(command)
       }
     }

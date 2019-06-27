@@ -13,6 +13,7 @@ import UserEdit from '@/components/admin/users/Edit'
 import PostsList from '@/components/posts/List'
 import PostDetail from '@/components/posts/Detail'
 import PostCreate from '@/components/posts/Create'
+import PostManage from '@/components/posts/Manage'
 
 Vue.use(Router)
 
@@ -72,6 +73,18 @@ const router = new Router({
       path: '/news-create',
       name: 'PostCreate',
       component: PostCreate,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/news/:id/edit',
+      name: 'PostEdit',
+      component: PostCreate,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/news-manage',
+      name: 'PostManage',
+      component: PostManage,
       meta: { requiresAuth: true }
     }
   ]

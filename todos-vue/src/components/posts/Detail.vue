@@ -10,7 +10,9 @@
               span {{ ' | '}}
               <i class="el-icon-chat-dot-square"></i> {{ post.comments.length }} Comments
             span.time-ago , posted {{ timesAgo(post.created_at) }}
-          el-button(style="float: right" type="primary" icon="el-icon-back" round size="mini" @click="backHome()") BACK
+          span(style="float: right")
+            el-button(type="warning" icon="el-icon-edit-outline" round size="mini" @click="editPost()") EDIT
+            el-button(type="primary" icon="el-icon-back" round size="mini" @click="backHome()") BACK
         el-row(style="padding: 14px 20px")
           span.post-title {{ post.title }}
         el-row(style="padding: 14px 20px")
@@ -33,8 +35,8 @@ export default {
     }
   },
   created () {
-    const postId = this.$route.params.id
-    this.$http.plain.get(`/posts/${postId}`)
+    this.postId = this.$route.params.id
+    this.$http.plain.get(`/posts/${this.postId}`)
       .then(response => { this.post = response.data })
       .catch(error => this.setError(error, 'Something went wrong'))
   },
@@ -47,6 +49,9 @@ export default {
     },
     backHome () {
       this.$router.replace('/')
+    },
+    editPost () {
+      this.$router.replace(`/news/${this.postId}/edit`)
     }
   }
 }

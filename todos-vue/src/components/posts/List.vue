@@ -1,6 +1,6 @@
 <template lang="pug">
   el-row
-    el-col(:span="8" :offset="8")
+    el-col(:span="10" :offset="7")
       el-card.box-card(v-for="post in posts" :key="post.id" :body-style="{ padding: '0px' }" shadow="hover")
         el-row.box-card-header
           span.signin-info
