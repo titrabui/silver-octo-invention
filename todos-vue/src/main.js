@@ -8,6 +8,7 @@ import VueAxios from 'vue-axios'
 import { securedAxiosInstance, plainAxiosInstance } from './backend/axios'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import CKEditor from '@ckeditor/ckeditor5-vue'
 
 Vue.config.productionTip = false
 Vue.use(VueAxios, {
@@ -15,6 +16,7 @@ Vue.use(VueAxios, {
   plain: plainAxiosInstance
 })
 Vue.use(ElementUI, { size: 'small', zIndex: 3000 })
+Vue.use(CKEditor)
 
 /* eslint-disable no-new */
 new Vue({

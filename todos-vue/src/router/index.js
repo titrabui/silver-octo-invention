@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import { store } from './../store'
+import { Notification } from 'element-ui'
 import Signin from '@/components/Signin'
 import Signup from '@/components/Signup'
 import TodosList from '@/components/todos/List'
@@ -8,10 +10,14 @@ import UserTodosList from '@/components/admin/users/todos/List'
 import ForgotPassword from '@/components/ForgotPassword'
 import ResetPassword from '@/components/ResetPassword'
 import UserEdit from '@/components/admin/users/Edit'
+import PostsList from '@/components/posts/List'
+import PostDetail from '@/components/posts/Detail'
+import PostCreate from '@/components/posts/Create'
+import PostManage from '@/components/posts/Manage'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/signin',
@@ -52,6 +58,57 @@ export default new Router({
       path: '/admin/users/:id',
       name: 'UserEdit',
       component: UserEdit
+    },
+    {
+      path: '/',
+      name: 'PostList',
+      component: PostsList
+    },
+    {
+      path: '/news/:id',
+      name: 'PostDetail',
+      component: PostDetail
+    },
+    {
+      path: '/news-create',
+      name: 'PostCreate',
+      component: PostCreate,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/news/:id/edit',
+      name: 'PostEdit',
+      component: PostCreate,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/news-manage',
+      name: 'PostManage',
+      component: PostManage,
+      meta: { requiresAuth: true }
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!store.state.signedIn) {
+      next({
+        path: '/signin',
+        query: { redirect: to.fullPath }
+      })
+      Notification({
+        title: 'Login required',
+        message: 'Please log in to do this',
+        type: 'warning',
+        duration: 2000
+      })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+})
+
+export default router

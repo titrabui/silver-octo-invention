@@ -20,4 +20,6 @@ Rails.application.routes.draw do
       patch ':token', action: :update
     end
   end
+
+  resources :posts
 end
