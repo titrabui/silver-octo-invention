@@ -60,7 +60,8 @@ exports.cssLoaders = function (options) {
     postcss: generateLoaders(),
     less: generateLoaders('less'),
     sass: generateLoaders('sass', { indentedSyntax: true }),
-    scss: generateLoaders('sass'),
+    // Fix vue-cli server error Invalid CSS after "...load the styles": expected 1 selector or at-rule, was "var content = requi"
+    // scss: generateLoaders('sass'),
     stylus: generateLoaders('stylus'),
     styl: generateLoaders('stylus')
   }

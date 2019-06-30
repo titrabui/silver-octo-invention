@@ -94,24 +94,3 @@ export default {
   }
 }
 </script>
-
-<style lang="css">
-.signin-form {
-  padding: 20px 20px 0 !important;
-  border: dashed 1px #409EFF;
-  border-radius: 5px;
-  margin-top: 20px;
-  background-color: #F2F6FC;
-}
-
-.banner-image {
-  margin: -19px -20px 30px;
-}
-
-.page-title {
-  text-align: center;
-  font-weight: 500;
-  font-size: 25px;
-  color: #409EFF;
-}
-</style>

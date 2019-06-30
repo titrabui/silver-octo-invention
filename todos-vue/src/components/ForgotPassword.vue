@@ -9,14 +9,6 @@
     <el-row :gutter="20">
       <el-col :span="6" :offset="9" class="signin-form">
         <el-alert
-          v-if="notice"
-          :title="notice"
-          type="success"
-          effect="dark"
-          center
-          :closable=false>
-        </el-alert>
-        <el-alert
           v-if="error"
           :title="error"
           type="error"
@@ -24,12 +16,12 @@
           center
           :closable=false>
         </el-alert>
-        <el-form :model="resetForm" ref="resetForm" :rules="resetValidates" label-position="top" label-width="100px" size="large" :hide-required-asterisk="true">
+        <el-form :model="forgotForm" ref="forgotForm" :rules="forgotValidates" label-position="top" label-width="100px" size="large" :hide-required-asterisk="true">
           <el-form-item prop="email" label="Email address">
-            <el-input placeholder="Please input email" v-model="resetForm.email"></el-input>
+            <el-input placeholder="Please input email" v-model="forgotForm.email"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" style="width: 100%" round @click="reset()">Reset Password</el-button>
+            <el-button type="primary" style="width: 100%" round @click="reset()">Reset password</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -42,24 +34,23 @@ export default {
   name: 'ForgotPassword',
   data () {
     return {
-      resetForm: {
+      forgotForm: {
         email: ''
       },
       error: '',
-      notice: '',
-      resetValidates: {
+      forgotValidates: {
         email: [
           { required: true, message: 'Please input email address', trigger: 'blur' },
-          { type: 'email', message: 'Please input correct email address', trigger: ['blur', 'change'] }
+          { type: 'email', message: 'Please input correct email address', trigger: 'blur' }
         ]
       }
     }
   },
   methods: {
     reset () {
-      this.$refs['resetForm'].validate((valid) => {
+      this.$refs['forgotForm'].validate((valid) => {
         if (valid) {
-          this.$http.plain.post('/password_resets', { email: this.resetForm.email })
+          this.$http.plain.post('/password_resets', { email: this.forgotForm.email })
             .then(() => this.submitSuccessful())
             .catch(error => this.submitFailed(error))
         } else {
@@ -68,9 +59,15 @@ export default {
       })
     },
     submitSuccessful () {
-      this.notice = 'Email with password reset instructions had been sent.'
       this.error = ''
       this.email = ''
+      this.$notify({
+        title: 'Reset password successful',
+        message: 'Email with password reset instructions had been sent.',
+        type: 'success',
+        duration: 5000
+      })
+      this.$router.replace('/signin')
     },
     submitFailed (error) {
       this.error = (error.response && error.response.data && error.response.data.error) || ''
@@ -78,23 +75,3 @@ export default {
   }
 }
 </script>
-<style lang="css">
-.signin-form {
-  padding: 20px 20px 0 !important;
-  border: dashed 1px #409EFF;
-  border-radius: 5px;
-  margin-top: 20px;
-  background-color: #F2F6FC;
-}
-
-.banner-image {
-  margin: -19px -20px 30px;
-}
-
-.page-title {
-  text-align: center;
-  font-weight: 500;
-  font-size: 25px;
-  color: #409EFF;
-}
-</style>

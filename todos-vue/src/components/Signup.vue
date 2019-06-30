@@ -57,7 +57,7 @@ export default {
       this.$http.plain.get('/me').then(meResponse => {
         this.$store.commit('setCurrentUser', { currentUser: meResponse.data, csrf: response.data.csrf })
         this.error = ''
-        this.$router.replace('/todos')
+        this.$router.replace('/')
         this.$notify({
           title: 'Sign up successful',
           message: 'You signed up and loged in successful',
@@ -72,18 +72,9 @@ export default {
     },
     checkSignedIn () {
       if (this.$store.state.signedIn) {
-        this.$router.replace('/todos')
+        this.$router.replace('/')
       }
     }
   }
 }
 </script>
-
-<style lang="css">
-.form-signup {
-  width: 70%;
-  max-width: 500px;
-  padding: 10% 15px;
-  margin: 0 auto;
-}
-</style>

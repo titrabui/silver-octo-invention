@@ -9,6 +9,7 @@ import { securedAxiosInstance, plainAxiosInstance } from './backend/axios'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import CKEditor from '@ckeditor/ckeditor5-vue'
+import './styles/app.scss'
 
 Vue.config.productionTip = false
 Vue.use(VueAxios, {

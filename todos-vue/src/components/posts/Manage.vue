@@ -103,17 +103,3 @@ export default {
   }
 }
 </script>
-
-<style lang="css" scoped>
-.box-card {
-  margin-bottom: 15px;
-}
-.box-card-header {
-  padding: 14px;
-  background-color: #faebd775;
-}
-.box-header-title {
-  font-weight: bold;
-  font-size: 18px;
-}
-</style>
