@@ -3,7 +3,7 @@
     el-row
       ckeditor(:editor="editor" v-model="content" :config="editorConfig")
     el-row.editor-btn
-      el-button(round size="mini" @click="onCancel()") Cancel
+      el-button(round size="mini" @click="onCancel()" v-if="hasCancelBtn") Cancel
       el-button(type="primary" round size="mini" @click="onSave()") {{ buttonName }}
 </template>
 
@@ -20,7 +20,13 @@ export default {
     })
   },
   props: {
-    buttonName: String
+    buttonName: String,
+    hasCancelBtn: {
+      type: Boolean,
+      default: function () {
+        return false
+      }
+    }
   },
   data () {
     return {
@@ -34,6 +40,7 @@ export default {
   methods: {
     onSave () {
       this.$emit('on-save', this.content)
+      this.content = ''
     },
     onCancel () {
       this.$emit('on-cancel')

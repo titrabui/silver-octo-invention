@@ -1,26 +1,18 @@
 <template lang="pug">
   el-row
     el-row(v-for="item in comments" :key="item.id" )
-      comment-item(:comment="item")
+      comment-item(:comment="item" @on-delete-comment="deleteComment")
 </template>
 
 <script>
 
-import CommentItem from '../comments/Item'
-import { mapGetters } from 'vuex'
-
 export default {
   name: 'CommentList',
-  components: {
-    CommentItem
+  beforeCreate: function () {
+    this.$options.components.CommentItem = require('./Item').default
   },
   props: {
     comments: Array
-  },
-  computed: {
-    ...mapGetters({
-      currentUser: 'currentUser'
-    })
   },
   data () {
     return {
@@ -31,11 +23,13 @@ export default {
   methods: {
     setError (error, text) {
       this.error = (error.response && error.response.data && error.response.data.error) || text
+    },
+    deleteComment (id) {
+      this.$http.secured.delete(`/comments/${id}`).then(response => {
+        const newComments = this.comments.filter(item => item.id !== id)
+        this.comments = newComments
+      }).catch(error => this.setError(error, 'Cannot delete comment'))
     }
   }
 }
 </script>
-
-<style lang="css" scoped>
-
-</style>

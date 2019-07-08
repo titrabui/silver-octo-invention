@@ -12,10 +12,7 @@ class CommentsController < ApplicationController
 
   # GET /comments_by_post/:post_id
   def comments_by_post
-    @comments = @post.comments.all.order('created_at DESC')
-    reply = @comments.select do |comment|
-      comment
-    end
+    @comments = @post.comments.where(parent_id: nil).order('created_at DESC')
 
     results = @comments.map do |comment|
       {
@@ -24,6 +21,7 @@ class CommentsController < ApplicationController
         author: comment.user,
         content: comment.content,
         replies: comment.replies,
+        likes: comment.likes,
         created_at: comment.created_at
       }
     end
@@ -43,6 +41,7 @@ class CommentsController < ApplicationController
         author: comment.user,
         content: comment.content,
         replies: comment.replies,
+        likes: comment.likes,
         created_at: comment.created_at
       }
     end
@@ -56,6 +55,11 @@ class CommentsController < ApplicationController
     @comment.user_id = current_user.id
 
     if @comment.save
+      if params[:parent_id].present?
+        parent_comment = @post.comments.find(params[:parent_id])
+        parent_comment.update({ replies: parent_comment.replies + 1 })
+      end
+
       render json: @comment, status: :created, location:@comment
     else
       render json: @comment.errors, status: unprocessable_entity
@@ -79,7 +83,7 @@ class CommentsController < ApplicationController
   private
 
   def set_comment
-    @comment = current_user.comments.find(params[:id])
+    @comment = current_user.comments.find(params[:id].to_i)
   end
 
   def set_post

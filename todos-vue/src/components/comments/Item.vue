@@ -1,21 +1,27 @@
 <template lang="pug">
   el-row
     el-card.box-card(shadow="hover" :body-style="{ padding: '0px' }")
-      el-row.box-card-header
+      el-row.comment-panel-header
         span.signin-info
           img.post-user-avatar(src="@/assets/images/avatar_default.png" height="25")
-          span.post-user-email {{ comment.author.email }}
+          span.comment-author-name {{ comment.author.email }}
           span.time-ago  {{ timesAgo(comment.created_at) }}
-      el-row(style="padding: 0 20px")
+      el-row(style="padding-left: 20px")
         el-row(style="margin-top: 5px")
-          p(v-html="comment.content")
+          p.comment-content(v-html="comment.content")
         el-row
-          el-button(type="text" icon="el-icon-star-off") Like
-          el-button(type="text" icon="el-icon-chat-dot-square" @click="showCommentEditor = true") Reply
-        el-row(v-if="showCommentEditor")
-          editor(@on-save="saveComment" @on-cancel="hideCommentEditor" button-name="Comment")
+          el-badge(:value="comment.likes" type="primary" :hidden="comment.likes === 0")
+            el-button(type="text" icon="el-icon-star-off" :disabled="!isSignedIn" style="color: #909399") Like
+          el-badge(:value="comment.replies" :hidden="comment.replies === 0" style="margin-left: 20px")
+            el-button(type="text" icon="el-icon-chat-dot-square" @click="showCommentEditor = true" :disabled="!isSignedIn" style="color: #909399") Reply
+          span(v-if="canEditOrDelete()" style="margin-left: 20px")
+            el-button(type="text" @click="showCommentEditor = true" style="color: #E6A23C") Edit
+            span /
+            el-button(type="text" @click="onDeleteComment()" style="color: #F56C6C") Delete
+        el-row(v-if="showCommentEditor" style="margin-right: 5px")
+          editor(@on-save="saveReply" @on-cancel="hideCommentEditor" :has-cancel-btn="true" button-name="Comment")
         el-row(v-if="comment.replies")
-          el-button(type="text" @click="viewMoreComment(comment.id)" v-if="!isViewMore") View more {{ comment.replies }} reply >>
+          el-button(type="text" @click="viewMoreComment(comment.id)" v-if="!isViewMore") View more {{ comment.replies }} replies >>
           comment-list(:comments="replyComments" v-if="isViewMore")
 </template>
 
@@ -30,10 +36,11 @@ export default {
   name: 'CommentItem',
   components: {
     Editor,
-    'comment-list': CommentList
+    CommentList
   },
   computed: {
     ...mapGetters({
+      isSignedIn: 'isSignedIn',
       currentUser: 'currentUser'
     })
   },
@@ -45,7 +52,8 @@ export default {
           id: null,
           author: { email: '' },
           content: '',
-          replies: 0
+          replies: 0,
+          likes: 0
         }
       }
     }
@@ -64,16 +72,16 @@ export default {
     timesAgo (createdAt) {
       return moment(createdAt).fromNow()
     },
-    editPost () {
-      this.$router.replace(`/news/${this.postId}/edit`)
-    },
-    saveComment (content) {
+    saveReply (content) {
       this.$http.secured.post('/comments', {
-        parent_id: null,
+        parent_id: this.comment.id,
         post_id: this.comment.post_id,
-        content: content
+        content: content,
+        replies: this.comment.replies + 1
       }).then(response => {
-
+        this.viewMoreComment(this.comment.id)
+        this.hideCommentEditor()
+        this.comment.replies = this.comment.replies + 1
       }).catch(error => this.setError(error, 'Cannot create comment'))
     },
     hideCommentEditor () {
@@ -81,53 +89,16 @@ export default {
     },
     viewMoreComment (commentId) {
       this.$http.plain.get(`/replies/${commentId}`).then(response => {
-        this.replyComments = response
+        this.replyComments = response.data
         this.isViewMore = true
       }).catch(error => this.setError(error, 'Cannot create comment'))
+    },
+    canEditOrDelete () {
+      return this.currentUser && this.currentUser.id === this.comment.author.id
+    },
+    onDeleteComment () {
+      this.$emit('on-delete-comment', this.comment.id)
     }
   }
 }
 </script>
-
-<style lang="css" scoped>
-.post-user-avatar {
-  margin-right: 5px;
-  border-radius: 50%;
-}
-.post-user-email {
-  font-size: 12px;
-  font-weight: 700;
-  color: rgb(28, 28, 28);
-  line-height: 20px;
-}
-.time-ago {
-  color: rgb(120, 124, 126);
-  font-size: 12px;
-  font-weight: 100;
-}
-.image {
-  width: 100%;
-  display: block;
-}
-.post-title {
-  overflow-wrap: break-word;
-  font-size: 30px;
-  font-weight: bold;
-  line-height: 22px;
-}
-.post-sub-title {
-  overflow-wrap: break-word;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 22px;
-}
-.post-header-comment {
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 16px;
-  color: rgb(135, 138, 140);
-}
-.ck-content {
-  min-height: 200px !important;
-}
-</style>
