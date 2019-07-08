@@ -8,8 +8,6 @@ Rails.application.routes.draw do
 
   get 'me', controller: :users, action: :me
 
-  resources :todos
-
   namespace :admin do
     resources :users, only: [:index]
   end
@@ -21,5 +19,6 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :posts
+  resources :posts, :comments
+  get 'comments_by_post', controller: :comments, action: :comments_by_post
 end

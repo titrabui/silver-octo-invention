@@ -6,9 +6,9 @@
           span.signin-info
             img.post-user-avatar(src="@/assets/images/avatar_default.png" height="25")
             span.post-user-email {{ post.user.email }}
-            span.post-comment
+            span.post-header-comment
               span {{ ' | '}}
-              <i class="el-icon-chat-dot-square"></i> {{ post.comments.length }} Comments
+              <i class="el-icon-chat-dot-square"></i> {{ comments.length }} Comments
             span.time-ago , posted {{ timesAgo(post.created_at) }}
           span(style="float: right")
             el-button(type="warning" icon="el-icon-edit-outline" round size="mini" @click="editPost()") EDIT
@@ -19,26 +19,47 @@
           span.post-sub-title {{ post.sub_title }}
         el-row(style="padding: 14px 20px")
           p(v-html="post.description")
+        el-row(style="padding: 14px 20px")
+          ckeditor(:editor="editor" v-model="commentContent" :config="editorConfig")
+          el-button(type="primary" round size="mini" @click="saveComment()") COMMENT
+        el-row(style="padding: 14px 20px" v-if="comments.length")
+          el-row(v-for="item in comments" :key="item.id" )
+            comment-item(:comment="item")
 </template>
 
 <script>
 
 import moment from 'moment'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import CommentItem from '../comments/Item'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Detail',
+  components: {
+    CommentItem
+  },
+  computed: {
+    ...mapGetters({
+      currentUser: 'currentUser'
+    })
+  },
   data () {
     return {
       post: {},
+      comments: [],
       error: '',
-      postId: null
+      postId: null,
+      editor: ClassicEditor,
+      editorConfig: {
+        placeholder: 'What are your thought?'
+      },
+      commentContent: ''
     }
   },
   created () {
-    this.postId = this.$route.params.id
-    this.$http.plain.get(`/posts/${this.postId}`)
-      .then(response => { this.post = response.data })
-      .catch(error => this.setError(error, 'Something went wrong'))
+    this.fetchPosts()
+    this.fetchComments()
   },
   methods: {
     setError (error, text) {
@@ -50,21 +71,34 @@ export default {
     backHome () {
       this.$router.replace('/')
     },
+    fetchPosts () {
+      this.postId = this.$route.params.id
+      this.$http.plain.get(`/posts/${this.postId}`)
+        .then(response => { this.post = response.data })
+        .catch(error => this.setError(error, 'Something went wrong'))
+    },
     editPost () {
       this.$router.replace(`/news/${this.postId}/edit`)
+    },
+    fetchComments () {
+      this.$http.plain.get(`/comments_by_post`, { params: { post_id: this.postId } })
+        .then(response => { this.comments = response.data })
+        .catch(error => this.setError(error, 'Something went wrong'))
+    },
+    saveComment () {
+      this.$http.secured.post('/comments', {
+        parent_id: null,
+        post_id: this.postId,
+        content: this.commentContent
+      }).then(response => {
+        this.commentContent = ''
+      }).catch(error => this.setError(error, 'Cannot create comment'))
     }
   }
 }
 </script>
 
 <style lang="css" scoped>
-.box-card {
-  margin-bottom: 15px;
-}
-.box-card-header {
-  padding: 14px;
-  background-color: #faebd775;
-}
 .post-user-avatar {
   margin-right: 5px;
   border-radius: 50%;
@@ -96,10 +130,13 @@ export default {
   font-weight: 600;
   line-height: 22px;
 }
-.post-comment {
+.post-header-comment {
   font-size: 12px;
   font-weight: 700;
   line-height: 16px;
   color: rgb(135, 138, 140);
+}
+.ck-content {
+  min-height: 200px !important;
 }
 </style>

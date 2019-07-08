@@ -13,7 +13,7 @@ class PostsController < ApplicationController
         sub_title: post.sub_title,
         description: post.description,
         user: post.user,
-        comments: post.comments,
+        comments: post.comments.length,
         image_url: extract_image_from_post(post.description),
         created_at: post.created_at
       }
@@ -29,7 +29,7 @@ class PostsController < ApplicationController
       sub_title: @post.sub_title,
       description: @post.description,
       user: @post.user,
-      comments: @post.comments,
+      comments: @post.comments.length,
       image_url: extract_image_from_post(@post.description),
       created_at: @post.created_at
     }

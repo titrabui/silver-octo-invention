@@ -8,7 +8,7 @@
             span.post-user-email {{ post.user.email }}
             span.post-comment
               span {{ ' | '}}
-              <i class="el-icon-chat-dot-square"></i> {{ post.comments.length }} Comments
+              <i class="el-icon-chat-dot-square"></i> {{ post.comments }} Comments
             span.time-ago , posted {{ timesAgo(post.created_at) }}
           el-button(style="float: right" type="primary" icon="el-icon-circle-plus" round size="mini" @click="showPost(post.id)") JOIN
         el-row(style="padding: 14px")

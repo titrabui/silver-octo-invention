@@ -1,7 +1,7 @@
 class CommentsController < ApplicationController
-  before_action :authorize_access_request! only: [:create, :update, :destroy]
+  before_action :authorize_access_request!, only: [:create, :update, :destroy]
   before_action :set_comment, only: [:update, :destroy]
-  before_action :set_post, only: [:create, :update, :destroy]
+  before_action :set_post, only: [:comments_by_post, :create, :update, :destroy]
 
   # GET /comments
   def index
@@ -10,7 +10,24 @@ class CommentsController < ApplicationController
     render json: @comments
   end
 
-  # comment /comments
+  # GET /comments_by_post/:post_id
+  def comments_by_post
+    @comments = @post.comments.all.order('created_at DESC')
+
+    results = @comments.map do |comment|
+      { 
+        id: comment.id,
+        post_id: comment.post.id,
+        author: comment.user,
+        content: comment.content,
+        created_at: comment.created_at
+      }
+    end
+
+    render json: results
+  end
+
+  # POST /comments
   def create
     @comment = @post.comments.build(comment_params)
     @comment.user_id = current_user.id
@@ -42,11 +59,13 @@ class CommentsController < ApplicationController
     @comment = current_user.comments.find(params[:id])
   end
 
+
   def set_post
+    puts "AAAAAAAAAAAAAAAAAAAAAAA#{params['post_id']}"
     @post = Post.find(params[:post_id])
   end
 
   def comment_params
-    params.require(:comment).permit(:content)
+    params.require(:comment).permit(:parent_id, :content)
   end
 end
