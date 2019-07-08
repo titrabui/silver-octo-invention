@@ -23,21 +23,20 @@
           ckeditor(:editor="editor" v-model="commentContent" :config="editorConfig")
           el-button(type="primary" round size="mini" @click="saveComment()") COMMENT
         el-row(style="padding: 14px 20px" v-if="comments.length")
-          el-row(v-for="item in comments" :key="item.id" )
-            comment-item(:comment="item")
+          comment-list(:comments="comments")
 </template>
 
 <script>
 
 import moment from 'moment'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
-import CommentItem from '../comments/Item'
+import CommentList from '../comments/List'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'Detail',
   components: {
-    CommentItem
+    CommentList
   },
   computed: {
     ...mapGetters({

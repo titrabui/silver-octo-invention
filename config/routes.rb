@@ -21,4 +21,5 @@ Rails.application.routes.draw do
 
   resources :posts, :comments
   get 'comments_by_post', controller: :comments, action: :comments_by_post
+  get 'replies/:id', controller: :comments, action: :comments_by_parent
 end

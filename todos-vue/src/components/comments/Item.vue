@@ -1,26 +1,37 @@
 <template lang="pug">
   el-row
-    el-card.box-card(:body-style="{ padding: '0px' }")
+    el-card.box-card(shadow="hover" :body-style="{ padding: '0px' }")
       el-row.box-card-header
         span.signin-info
           img.post-user-avatar(src="@/assets/images/avatar_default.png" height="25")
           span.post-user-email {{ comment.author.email }}
           span.time-ago  {{ timesAgo(comment.created_at) }}
-      el-row(style="padding: 14px 20px")
-        p(v-html="comment.content")
-      el-row(style="padding: 14px 20px")
-        ckeditor(:editor="editor" v-model="commentContent" :config="editorConfig")
-        el-button(type="primary" round size="mini" @click="saveComment()") COMMENT
+      el-row(style="padding: 0 20px")
+        el-row(style="margin-top: 5px")
+          p(v-html="comment.content")
+        el-row
+          el-button(type="text" icon="el-icon-star-off") Like
+          el-button(type="text" icon="el-icon-chat-dot-square" @click="showCommentEditor = true") Reply
+        el-row(v-if="showCommentEditor")
+          editor(@on-save="saveComment" @on-cancel="hideCommentEditor" button-name="Comment")
+        el-row(v-if="comment.replies")
+          el-button(type="text" @click="viewMoreComment(comment.id)" v-if="!isViewMore") View more {{ comment.replies }} reply >>
+          comment-list(:comments="replyComments" v-if="isViewMore")
 </template>
 
 <script>
 
 import moment from 'moment'
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import Editor from '@/commons/Editor'
+import CommentList from '../comments/List'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'CommentItem',
+  components: {
+    Editor,
+    'comment-list': CommentList
+  },
   computed: {
     ...mapGetters({
       currentUser: 'currentUser'
@@ -31,20 +42,19 @@ export default {
       type: Object,
       default: function () {
         return {
+          id: null,
           author: { email: '' },
-          content: ''
+          content: '',
+          replies: 0
         }
       }
     }
   },
   data () {
     return {
-      error: '',
-      editor: ClassicEditor,
-      editorConfig: {
-        placeholder: 'What are your thought?'
-      },
-      commentContent: ''
+      showCommentEditor: false,
+      replyComments: [],
+      isViewMore: false
     }
   },
   methods: {
@@ -57,13 +67,22 @@ export default {
     editPost () {
       this.$router.replace(`/news/${this.postId}/edit`)
     },
-    saveComment () {
+    saveComment (content) {
       this.$http.secured.post('/comments', {
         parent_id: null,
-        post_id: this.postId,
-        content: this.commentContent
+        post_id: this.comment.post_id,
+        content: content
       }).then(response => {
-        this.commentContent = ''
+
+      }).catch(error => this.setError(error, 'Cannot create comment'))
+    },
+    hideCommentEditor () {
+      this.showCommentEditor = false
+    },
+    viewMoreComment (commentId) {
+      this.$http.plain.get(`/replies/${commentId}`).then(response => {
+        this.replyComments = response
+        this.isViewMore = true
       }).catch(error => this.setError(error, 'Cannot create comment'))
     }
   }

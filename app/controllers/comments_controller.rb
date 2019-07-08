@@ -13,13 +13,36 @@ class CommentsController < ApplicationController
   # GET /comments_by_post/:post_id
   def comments_by_post
     @comments = @post.comments.all.order('created_at DESC')
+    reply = @comments.select do |comment|
+      comment
+    end
 
     results = @comments.map do |comment|
+      {
+        id: comment.id,
+        post_id: comment.post.id,
+        author: comment.user,
+        content: comment.content,
+        replies: comment.replies,
+        created_at: comment.created_at
+      }
+    end
+
+    render json: results
+  end
+
+  # GET /replies/:id
+  def comments_by_parent
+    parent_id = params[:id]
+    comments = Comment.where(parent_id: parent_id)
+
+    results = comments.map do |comment|
       { 
         id: comment.id,
         post_id: comment.post.id,
         author: comment.user,
         content: comment.content,
+        replies: comment.replies,
         created_at: comment.created_at
       }
     end
@@ -59,9 +82,7 @@ class CommentsController < ApplicationController
     @comment = current_user.comments.find(params[:id])
   end
 
-
   def set_post
-    puts "AAAAAAAAAAAAAAAAAAAAAAA#{params['post_id']}"
     @post = Post.find(params[:post_id])
   end
 
