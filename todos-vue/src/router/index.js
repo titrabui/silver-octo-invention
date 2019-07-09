@@ -37,7 +37,8 @@ const router = new Router({
     {
       path: '/admin/users',
       name: 'UsersList',
-      component: UsersList
+      component: UsersList,
+      meta: { requiresAuth: true, roles: ['admin', 'manager'] }
     },
     {
       path: '/admin/users/:id/todos',
@@ -57,7 +58,8 @@ const router = new Router({
     {
       path: '/admin/users/:id',
       name: 'UserEdit',
-      component: UserEdit
+      component: UserEdit,
+      meta: { requiresAuth: true }
     },
     {
       path: '/',
@@ -91,7 +93,11 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+
+  if (requiresAuth) {
+    const requiresRoles = to.matched.some(record => record.meta.roles)
+
     if (!store.state.signedIn) {
       next({
         path: '/signin',
@@ -103,6 +109,16 @@ router.beforeEach((to, from, next) => {
         type: 'warning',
         duration: 2000
       })
+    } else if (requiresRoles) {
+      const roles = to.matched.map(record => record.meta.roles)[0]
+      if (store.state.currentUser && !roles.includes(store.state.currentUser.role)) {
+        next({
+          path: '/',
+          query: { redirect: to.fullPath }
+        })
+      } else {
+        next()
+      }
     } else {
       next()
     }

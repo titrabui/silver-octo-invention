@@ -43,7 +43,7 @@
           </el-dropdown-menu>
           <el-dropdown-menu slot="dropdown" v-if="isSignedIn">
             <el-dropdown-item command="news-manage" icon="el-icon-platform-eleme">News Management</el-dropdown-item>
-            <el-dropdown-item command="users" icon="el-icon-user-solid">Users Management</el-dropdown-item>
+            <el-dropdown-item v-if="isAdmin || isManager" command="admin/users" icon="el-icon-user-solid">Users Management</el-dropdown-item>
             <el-dropdown-item command="setting" icon="el-icon-s-tools">Profile Settings</el-dropdown-item>
             <el-dropdown-item command="signout" icon="el-icon-back">Log Out</el-dropdown-item>
           </el-dropdown-menu>

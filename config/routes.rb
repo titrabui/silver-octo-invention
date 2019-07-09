@@ -8,10 +8,8 @@ Rails.application.routes.draw do
 
   get 'me', controller: :users, action: :me
 
-  resources :todos
-
   namespace :admin do
-    resources :users, only: [:index]
+    resources :users, only: [:index, :update]
   end
 
   resources :password_resets, only: [:create] do
@@ -22,4 +20,9 @@ Rails.application.routes.draw do
   end
 
   resources :posts
+  get 'posts_by_user', controller: :posts, action: :posts_by_user
+
+  resources :comments
+  get 'comments_by_post', controller: :comments, action: :comments_by_post
+  get 'replies/:id', controller: :comments, action: :comments_by_parent
 end
