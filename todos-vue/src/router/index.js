@@ -14,6 +14,7 @@ import PostsList from '@/components/posts/List'
 import PostDetail from '@/components/posts/Detail'
 import PostCreate from '@/components/posts/Create'
 import PostManage from '@/components/posts/Manage'
+import UserSetting from '@/components/user/Setting'
 
 Vue.use(Router)
 
@@ -33,6 +34,12 @@ const router = new Router({
       path: '/todos',
       name: 'List',
       component: TodosList
+    },
+    {
+      path: '/setting',
+      name: 'UserSetting',
+      component: UserSetting,
+      meta: { requiresAuth: true }
     },
     {
       path: '/admin/users',

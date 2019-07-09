@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   post 'signup', controller: :signup, action: :create
   delete 'signin', controller: :signin, action: :destroy
 
+  resources :users, only: [:update]
   get 'me', controller: :users, action: :me
 
   namespace :admin do
