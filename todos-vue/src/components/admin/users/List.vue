@@ -38,10 +38,10 @@
             el-table-column(label="Registered At" min-width="150")
               template(slot-scope="scope")
                 span {{ createdAt(scope.row.created_at) }}
-            el-table-column(fixed="right" label="Operations" width="120")
+            el-table-column(fixed="right" label="Operations" width="120" :align="isManager ? 'center' : 'left'")
               template(slot-scope="scope")
-                el-tooltip(content="Edit")
-                  el-button(@click="editUser(scope.row.id)" type="warning" icon="el-icon-edit" circle)
+                el-tooltip(content="View News")
+                  el-button(@click="viewUserPost(scope.row.id)" type="success" icon="el-icon-news" circle)
                 el-tooltip(content="Delete")
                   el-button(v-if="canDeleteUser(scope.row.id)" @click="deleteUser(scope.row.id)" type="danger" icon="el-icon-delete" circle)
         el-row(style="padding: 14px 20px; text-align: center;")
@@ -59,6 +59,7 @@
 
 import moment from 'moment'
 import { mapGetters } from 'vuex'
+import { store } from '@/store'
 
 export default {
   name: 'UsersList',
@@ -66,7 +67,7 @@ export default {
     ...mapGetters({
       isAdmin: 'isAdmin',
       isManager: 'isManager',
-      currentUser: 'currentUser'
+      currentUserId: 'currentUserId'
     })
   },
   data () {
@@ -96,8 +97,9 @@ export default {
     backHome () {
       this.$router.replace('/')
     },
-    editUser (userId) {
-      this.$router.replace(`/users/${userId}/edit`)
+    viewUserPost (userId) {
+      store.commit('setPostManageUserId', { userId: userId })
+      this.$router.replace('/news-manage')
     },
     deleteUser (userId) {
       this.$confirm('This will permanently delete the user. Continue?', 'Warning', {
@@ -120,9 +122,6 @@ export default {
       this.$http.secured.get('/admin/users')
         .then(response => { this.users = response.data })
         .catch(error => this.setError(error, 'Something went wrong'))
-    },
-    showTodosLink () {
-      return this.$store.getters.isAdmin
     },
     canDeleteUser (userId) {
       return this.isAdmin && this.currentUserId !== userId

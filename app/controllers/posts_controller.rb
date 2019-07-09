@@ -1,12 +1,31 @@
 class PostsController < ApplicationController
-  before_action :authorize_access_request!, only: [:create, :update, :destroy]
+  before_action :authorize_access_request!, only: [:posts_by_user, :create, :update, :destroy]
   before_action :set_post, only: [:show, :update, :destroy]
+  before_action :set_user, only: [:posts_by_user]
 
   # GET /posts
   def index
     @posts = Post.all.order('created_at DESC')
 
     results = @posts.map do |post|
+      {
+        id: post.id,
+        title: post.title,
+        sub_title: post.sub_title,
+        description: post.description,
+        user: post.user,
+        comments: post.comments.length,
+        image_url: extract_image_from_post(post.description),
+        created_at: post.created_at
+      }
+    end
+    render json: results
+  end
+
+  # GET /posts_by_user
+  def posts_by_user
+    posts = @user.posts.order('created_at DESC')
+    results = posts.map do |post|
       {
         id: post.id,
         title: post.title,
@@ -64,6 +83,10 @@ class PostsController < ApplicationController
 
   def set_post
     @post = Post.find(params[:id])
+  end
+
+  def set_user
+    @user = User.find(params[:user_id])
   end
 
   def post_params

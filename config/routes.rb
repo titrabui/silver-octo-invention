@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   end
 
   resources :posts
+  get 'posts_by_user', controller: :posts, action: :posts_by_user
 
   resources :comments
   get 'comments_by_post', controller: :comments, action: :comments_by_post

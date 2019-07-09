@@ -26,7 +26,10 @@
             el-table-column(label="Sub Title" prop="sub_title" width="400")
             el-table-column(label="Comments" align="right" width="100")
               template(slot-scope="scope")
-                span {{ scope.row.comments && scope.row.comments.length }}
+                span {{ (scope.row.comments && scope.row.comments.length) || 0 }}
+            el-table-column(label="Author" min-width="150")
+              template(slot-scope="scope")
+                span {{ scope.row.user.email }}
             el-table-column(label="Created At" width="150")
               template(slot-scope="scope")
                 span {{ createdAt(scope.row.created_at) }}
@@ -50,9 +53,18 @@
 <script>
 
 import moment from 'moment'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Manage',
+  computed: {
+    ...mapGetters({
+      isAdmin: 'isAdmin',
+      isManager: 'isManager',
+      currentUserId: 'currentUserId',
+      postManageUserId: 'postManageUserId'
+    })
+  },
   data () {
     return {
       posts: [],
@@ -70,7 +82,7 @@ export default {
       this.error = (error.response && error.response.data && error.response.data.error) || text
     },
     createdAt (createdAt) {
-      return moment(createdAt).format('DD - MM - YYYY, H:mm:ss')
+      return moment(createdAt).format('DD - MM - YYYY H:mm:ss')
     },
     backHome () {
       this.$router.replace('/')
@@ -96,9 +108,21 @@ export default {
       }).catch(() => {})
     },
     fetchPosts () {
-      this.$http.plain.get(`/posts`)
-        .then(response => { this.posts = response.data })
-        .catch(error => this.setError(error, 'Something went wrong'))
+      if (this.isAdmin || this.isManager) {
+        if (this.postManageUserId) {
+          this.$http.secured.get('/posts_by_user', { params: { user_id: this.postManageUserId } })
+            .then(response => { this.posts = response.data })
+            .catch(error => this.setError(error, 'Something went wrong'))
+        } else {
+          this.$http.plain.get('/posts')
+            .then(response => { this.posts = response.data })
+            .catch(error => this.setError(error, 'Something went wrong'))
+        }
+      } else {
+        this.$http.secured.get('/posts_by_user', { params: { user_id: this.currentUserId } })
+          .then(response => { this.posts = response.data })
+          .catch(error => this.setError(error, 'Something went wrong'))
+      }
     }
   }
 }

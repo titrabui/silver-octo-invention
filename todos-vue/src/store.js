@@ -7,7 +7,9 @@ export const store = new Vuex.Store({
   state: {
     currentUser: {},
     signedIn: false,
-    csrf: null
+    csrf: null,
+    // temp
+    postManageUserId: null
   },
   getters: {
     isAdmin (state) {
@@ -24,6 +26,10 @@ export const store = new Vuex.Store({
     },
     isSignedIn (state) {
       return state.signedIn
+    },
+    // temp
+    postManageUserId (state) {
+      return state.postManageUserId
     }
   },
   mutations: {
@@ -36,6 +42,10 @@ export const store = new Vuex.Store({
       state.currentUser = {}
       state.signedIn = false
       state.csrf = null
+    },
+    // temp function, remove next time
+    setPostManageUserId (state, { userId }) {
+      state.postManageUserId = userId
     }
   },
   plugins: [createPersistedState()]
