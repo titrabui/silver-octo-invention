@@ -18,7 +18,7 @@
           p(v-html="post.description")
         el-row.post-header-comment(style="padding: 0px 20px")
           span
-            <i class="el-icon-chat-dot-square"></i> {{ comments.length }} Comments
+            <i class="el-icon-chat-dot-square"></i> {{ post.comments }} Comments
           el-button(type="text" icon="el-icon-star-off" style="margin-left: 10px") Share
           el-button(type="text" icon="el-icon-star-off") Report
         el-row(style="padding: 10px 20px")

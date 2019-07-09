@@ -8,14 +8,15 @@
           span.time-ago  {{ timesAgo(comment.created_at) }}
       el-row(style="padding-left: 20px")
         el-row(style="margin-top: 5px")
-          p.comment-content(v-html="comment.content")
+          p.comment-content(v-if="!isEditComment" v-html="comment.content")
+          editor(v-if="isEditComment" @on-save="editReply" @on-cancel="hideEditEditor" :has-cancel-btn="true" :content="comment.content" button-name="Edit" style="margin-right: 5px")
         el-row
           el-badge(:value="comment.likes" type="primary" :hidden="comment.likes === 0")
             el-button(type="text" icon="el-icon-star-off" :disabled="!isSignedIn" style="color: #909399") Like
           el-badge(:value="comment.replies" :hidden="comment.replies === 0" style="margin-left: 20px")
             el-button(type="text" icon="el-icon-chat-dot-square" @click="showCommentEditor = true" :disabled="!isSignedIn" style="color: #909399") Reply
           span(v-if="canEditOrDelete()" style="margin-left: 20px")
-            el-button(type="text" @click="showCommentEditor = true" style="color: #E6A23C") Edit
+            el-button(type="text" @click="isEditComment = true" style="color: #E6A23C") Edit
             span /
             el-button(type="text" @click="onDeleteComment()" style="color: #F56C6C") Delete
         el-row(v-if="showCommentEditor" style="margin-right: 5px")
@@ -62,7 +63,8 @@ export default {
     return {
       showCommentEditor: false,
       replyComments: [],
-      isViewMore: false
+      isViewMore: false,
+      isEditComment: false
     }
   },
   methods: {
@@ -86,6 +88,16 @@ export default {
     },
     hideCommentEditor () {
       this.showCommentEditor = false
+    },
+    editReply (content) {
+      this.$http.secured.patch(`/comments/${this.comment.id}`, { content: content })
+        .then(response => {
+          this.hideEditEditor()
+          this.comment.content = content
+        }).catch(error => this.setError(error, 'Cannot create comment'))
+    },
+    hideEditEditor () {
+      this.isEditComment = false
     },
     viewMoreComment (commentId) {
       this.$http.plain.get(`/replies/${commentId}`).then(response => {

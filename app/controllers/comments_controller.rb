@@ -1,7 +1,7 @@
 class CommentsController < ApplicationController
   before_action :authorize_access_request!, only: [:create, :update, :destroy]
   before_action :set_comment, only: [:update, :destroy]
-  before_action :set_post, only: [:comments_by_post, :create, :update, :destroy]
+  before_action :set_post, only: [:comments_by_post, :create]
 
   # GET /comments
   def index
@@ -68,7 +68,7 @@ class CommentsController < ApplicationController
 
   # PATCH/PUT /comments/1
   def update
-    if @comment.update(comment_params)
+    if @comment.update({ content: params[:content] })
       render json: @comment
     else
       render json: @comment.errors, status: unprocessable_entity
@@ -77,13 +77,16 @@ class CommentsController < ApplicationController
 
   # DEL /comments/1
   def destroy
-    @comment.destroy
+    parent = @comment.parent
+    if @comment.destroy
+      parent.update({ replies: parent.replies - 1 })
+    end
   end
 
   private
 
   def set_comment
-    @comment = current_user.comments.find(params[:id].to_i)
+    @comment = current_user.comments.find(params[:id])
   end
 
   def set_post

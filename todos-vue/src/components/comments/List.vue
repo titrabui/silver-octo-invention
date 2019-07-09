@@ -1,6 +1,6 @@
 <template lang="pug">
   el-row
-    el-row(v-for="item in comments" :key="item.id" )
+    el-row(v-for="item in childComments" :key="item.id" )
       comment-item(:comment="item" @on-delete-comment="deleteComment")
 </template>
 
@@ -11,13 +11,18 @@ export default {
   beforeCreate: function () {
     this.$options.components.CommentItem = require('./Item').default
   },
+  computed: {
+    childComments () {
+      return this.refreshComment()
+    }
+  },
   props: {
     comments: Array
   },
   data () {
     return {
       error: '',
-      postId: null
+      deletedItem: null
     }
   },
   methods: {
@@ -26,9 +31,11 @@ export default {
     },
     deleteComment (id) {
       this.$http.secured.delete(`/comments/${id}`).then(response => {
-        const newComments = this.comments.filter(item => item.id !== id)
-        this.comments = newComments
+        this.deletedItem = id
       }).catch(error => this.setError(error, 'Cannot delete comment'))
+    },
+    refreshComment () {
+      return this.comments.filter(item => item.id !== this.deletedItem)
     }
   }
 }

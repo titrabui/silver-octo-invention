@@ -7,7 +7,18 @@ class Admin::UsersController < ApplicationController
   def index
     @users = User.all
 
-    render json: @users
+    results = @users.map do |user|
+      {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        posts: user.posts.present? ? user.posts.length : 0,
+        comments: user.comments.present? ? user.comments.length : 0,
+        created_at: user.created_at
+      }
+    end
+
+    render json: results
   end
 
   def show

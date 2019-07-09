@@ -1,7 +1,7 @@
 <template lang="pug">
   el-row
     el-row
-      ckeditor(:editor="editor" v-model="content" :config="editorConfig")
+      ckeditor(:editor="editor" v-model="editorContent" :config="editorConfig")
     el-row.editor-btn
       el-button(round size="mini" @click="onCancel()" v-if="hasCancelBtn") Cancel
       el-button(type="primary" round size="mini" @click="onSave()") {{ buttonName }}
@@ -26,11 +26,12 @@ export default {
       default: function () {
         return false
       }
-    }
+    },
+    content: String
   },
   data () {
     return {
-      content: '',
+      editorContent: this.content || '',
       editor: ClassicEditor,
       editorConfig: {
         placeholder: 'What are your thought?'
@@ -39,8 +40,8 @@ export default {
   },
   methods: {
     onSave () {
-      this.$emit('on-save', this.content)
-      this.content = ''
+      this.$emit('on-save', this.editorContent)
+      this.editorContent = ''
     },
     onCancel () {
       this.$emit('on-cancel')
