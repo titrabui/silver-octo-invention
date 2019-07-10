@@ -18,7 +18,7 @@
             el-table-column(label="User ID" prop="id" width="80")
             el-table-column(label="Image" width="80")
               template(slot-scope="scope")
-                img(src="https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png" style="width: 40px")
+                img(:src="scope.row.avatar_url" style="width: 40px")
             el-table-column(label="Email" prop="email" min-width="200")
             el-table-column(label="Role" prop="role" min-width="100")
               template(slot-scope="scope")

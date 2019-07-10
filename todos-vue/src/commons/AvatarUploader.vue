@@ -1,7 +1,7 @@
 <template lang="pug">
-  el-upload(
-    class="avatar-uploader"
+  el-upload.avatar-uploader(
     action="https://jsonplaceholder.typicode.com/posts/"
+    :http-request="uploadSectionFile"
     :show-file-list="false"
     :on-success="handleAvatarSuccess"
     :before-upload="beforeAvatarUpload")
@@ -19,7 +19,6 @@ export default {
   methods: {
     handleAvatarSuccess (res, file) {
       this.imageUrl = URL.createObjectURL(file.raw)
-      this.$emit('on-upload', file)
     },
     beforeAvatarUpload (file) {
       const isJPG = file.type === 'image/jpeg'
@@ -32,6 +31,9 @@ export default {
         this.$message.error('Avatar picture size can not exceed 2MB!')
       }
       return isJPG && isLt2M
+    },
+    uploadSectionFile (param) {
+      this.$emit('on-upload', param)
     }
   }
 }

@@ -7,7 +7,7 @@
             i(class="el-icon-s-tools")
             span  Profile Settings
         el-row(style="padding: 14px 20px")
-          el-col(:span="8")
+          el-col(:span="8" align="center")
             avatar-uploader(@on-upload="uploadAvatar")
           el-col(:span="16")
             el-form(ref="profileForm" :model="currentUser" label-position="top" label-width="100px" :hide-required-asterisk="true")
@@ -44,11 +44,11 @@ export default {
     setError (error, text) {
       this.error = (error.response && error.response.data && error.response.data.error) || text
     },
-    uploadAvatar (avatar) {
-      this.$http.secured.patch(`/users/${this.currentUser.id}`, { file: avatar })
-        .then(response => {
+    uploadAvatar (param) {
+      const form = new FormData()
+      form.append('file', param.file)
 
-        })
+      this.$http.secured.post('/upload', form)
         .catch(error => this.setError(error, 'Cannot upload avatar'))
     }
   }

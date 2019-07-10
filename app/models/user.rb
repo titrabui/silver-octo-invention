@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   include ActiveModel::Serializers::JSON
+
   has_secure_password
   has_many :posts, :dependent => :destroy
   has_many :comments, :dependent => :destroy
@@ -14,7 +15,7 @@ class User < ApplicationRecord
   mount_uploader :avatar, AvatarUploader
 
   def attributes
-    { id: id, email: email, role: role }
+    { id: id, email: email, role: role, avatar: avatar }
   end
 
   def generate_password_token!
