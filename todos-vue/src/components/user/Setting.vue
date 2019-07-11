@@ -40,6 +40,9 @@ export default {
       error: ''
     }
   },
+  created () {
+
+  },
   methods: {
     setError (error, text) {
       this.error = (error.response && error.response.data && error.response.data.error) || text

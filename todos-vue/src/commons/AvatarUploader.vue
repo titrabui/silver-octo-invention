@@ -5,8 +5,8 @@
     :show-file-list="false"
     :on-success="handleAvatarSuccess"
     :before-upload="beforeAvatarUpload")
-    img(v-if="imageUrl" :src="imageUrl" class="avatar")
-    i(v-else class="el-icon-plus avatar-uploader-icon")
+    img.avatar(v-if="imageUrl" :src="imageUrl")
+    i.el-icon-plus.avatar-uploader-icon(v-else)
 </template>
 
 <script>
@@ -53,14 +53,14 @@ export default {
   .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
+    width: 250px;
+    height: 250px;
+    line-height: 250px;
     text-align: center;
   }
   .avatar {
-    width: 178px;
-    height: 178px;
+    width: 250px;
+    height: 250px;
     display: block;
   }
 </style>
