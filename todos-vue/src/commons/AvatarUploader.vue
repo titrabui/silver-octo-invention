@@ -3,7 +3,6 @@
     action="https://jsonplaceholder.typicode.com/posts/"
     :http-request="uploadSectionFile"
     :show-file-list="false"
-    :on-success="handleAvatarSuccess"
     :before-upload="beforeAvatarUpload")
     img.avatar(v-if="imageUrl" :src="imageUrl")
     i.el-icon-plus.avatar-uploader-icon(v-else)
@@ -11,15 +10,15 @@
 
 <script>
 export default {
-  data () {
-    return {
-      imageUrl: ''
+  props: {
+    imageUrl: {
+      type: String,
+      default: () => {
+        return ''
+      }
     }
   },
   methods: {
-    handleAvatarSuccess (res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw)
-    },
     beforeAvatarUpload (file) {
       const isJPG = file.type === 'image/jpeg'
       const isLt2M = file.size / 1024 / 1024 < 2

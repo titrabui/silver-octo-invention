@@ -6,14 +6,18 @@ class UsersController < ApplicationController
   end
 
   # PATCH/PUT /users/1
+  def update
+    if current_user.update(user_params)
+      render json:current_user
+    else
+      render json: current_user.errors, status: unprocessable_entity
+    end
+  end
+
+  # POST /upload
   def upload
     if current_user.update(avatar: params[:file])
-      render json: {
-        id: current_user.id,
-        email: current_user.email,
-        role: current_user.role,
-        avatar_url: (current_user.avatar.url && "http://#{request.host}:#{request.port}#{current_user.avatar.url}") || nil
-      }
+      render json: current_user
     else
       render json: current_user.errors, status: unprocessable_entity
     end
@@ -21,11 +25,7 @@ class UsersController < ApplicationController
 
   private
 
-  def set_user
-    @user = current_user
-  end
-
   def user_params
-    params.require(:user).permit(:full_name, :age, :address)
+    params.require(:user).permit(:display_name, :about, :birthday, :content_visibility)
   end
 end

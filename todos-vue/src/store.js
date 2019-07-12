@@ -43,9 +43,17 @@ export const store = new Vuex.Store({
       state.signedIn = false
       state.csrf = null
     },
+    updateCurrentUser (state, currentUser) {
+      state.currentUser = currentUser
+    },
     // temp function, remove next time
     setPostManageUserId (state, { userId }) {
       state.postManageUserId = userId
+    }
+  },
+  actions: {
+    updateCurrentUser ({ commit }, currentUser) {
+      commit('updateCurrentUser', currentUser)
     }
   },
   plugins: [createPersistedState()]

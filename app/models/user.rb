@@ -15,7 +15,7 @@ class User < ApplicationRecord
   mount_uploader :avatar, AvatarUploader
 
   def attributes
-    { id: id, email: email, role: role, avatar: avatar }
+    { id: id, email: email, role: role, avatar: avatar, display_name: display_name, about: about, birthday: birthday, content_visibility: content_visibility }
   end
 
   def generate_password_token!
