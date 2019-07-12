@@ -14,7 +14,7 @@ import PostsList from '@/components/posts/List'
 import PostDetail from '@/components/posts/Detail'
 import PostCreate from '@/components/posts/Create'
 import PostManage from '@/components/posts/Manage'
-import UserSettings from '@/components/settings'
+import UserSettings from '@/components/settings/Index'
 
 Vue.use(Router)
 

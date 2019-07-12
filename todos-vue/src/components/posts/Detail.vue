@@ -2,35 +2,38 @@
   el-row
     el-col(:span="12" :offset="6")
       el-card.box-card(:body-style="{ padding: '0px' }" v-if="Object.keys(post).length")
-        el-row.box-card-header
-          span.signin-info
-            img.post-user-avatar(src="@/assets/images/avatar_default.png" height="25")
+        el-row.box-card-header(:gutter="5")
+          el-col.post-info-container(:span="20")
+            el-avatar(v-if="post.user.url" :src="post.user.url" shape="square" :size="25")
+            el-avatar(v-else shape="square" :size="25") {{ post.user.email.charAt(0).toUpperCase() }}
             span.post-user-email {{ post.user.email }}
-            span.time-ago , posted {{ timesAgo(post.created_at) }}
-          span(style="float: right")
+            el-divider(direction="vertical")
+            span.post-time-ago posted {{ timesAgo(post.created_at) }}
+          el-col(:span="4" align="right")
             el-button(v-if="canEditPost()" type="warning" icon="el-icon-edit-outline" round size="mini" @click="editPost()") EDIT
             el-button(type="primary" icon="el-icon-back" round size="mini" @click="backHome()") BACK
-        el-row(style="padding: 14px 20px")
-          span.post-title {{ post.title }}
-        el-row(style="padding: 14px 20px")
-          span.post-sub-title {{ post.sub_title }}
-        el-row(style="padding: 14px 20px")
-          p(v-html="post.description")
-        el-row.post-header-comment(style="padding: 0px 20px")
-          span
-            <i class="el-icon-chat-dot-square"></i> {{ post.comments }} Comments
-          el-button(type="text" icon="el-icon-star-off" style="margin-left: 10px") Share
-          el-button(type="text" icon="el-icon-star-off") Report
-        el-row(style="padding: 10px 20px")
-          editor(v-if="isSignedIn" @on-save="saveComment" :has-cancel-btn="false" button-name="Comment")
-          el-row(:gutter="5" v-if="!isSignedIn")
-            el-col(:span="12")
-              span What are your thoughts? Log in or Sign up
-            el-col(:span="12" align="right")
-              el-button(@click="$router.replace('/signin')" icon="el-icon-thumb" round) LOG IN
-              el-button(@click="redirectToPage('/signup')" type="primary" icon="el-icon-position" round) SIGN UP
-        el-row(style="padding: 14px 20px" v-if="comments.length")
-          comment-list(:comments="comments")
+        el-row.box-card-body
+          el-row
+            p.post-title {{ post.title }}
+            p.post-sub-title {{ post.sub_title }}
+            p(v-html="post.description")
+          el-row
+            span.post-comment
+              <i class="el-icon-chat-dot-square"></i> {{ post.comments }} Comments
+            el-button(type="text" icon="el-icon-star-off" style="margin-left: 10px") Share
+            el-button(type="text" icon="el-icon-star-off") Report
+          el-row
+            el-divider
+            editor(v-if="isSignedIn" @on-save="saveComment" :has-cancel-btn="false" button-name="Comment")
+            el-row(v-else :gutter="5")
+              el-col(:span="12")
+                span What are your thoughts? Log in or Sign up
+              el-col(:span="12" align="right")
+                el-button(@click="$router.replace('/signin')" icon="el-icon-thumb" round) LOG IN
+                el-button(@click="redirectToPage('/signup')" type="primary" icon="el-icon-position" round) SIGN UP
+          el-row(v-if="comments.length")
+            el-divider
+            comment-list(:comments="comments")
 </template>
 
 <script>
