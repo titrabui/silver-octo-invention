@@ -13,7 +13,12 @@ class PostsController < ApplicationController
         title: post.title,
         sub_title: post.sub_title,
         description: post.description,
-        user: post.user,
+        author: {
+          id: post.user.id,
+          email: post.user.email,
+          display_name: post.user.display_name,
+          avatar: post.user.avatar.url
+        },
         comments: post.comments.length,
         image_url: extract_image_from_post(post.description),
         created_at: post.created_at
@@ -31,7 +36,12 @@ class PostsController < ApplicationController
         title: post.title,
         sub_title: post.sub_title,
         description: post.description,
-        user: post.user,
+        author: {
+          id: post.user.id,
+          email: post.user.email,
+          display_name: post.user.display_name,
+          avatar: post.user.avatar.url
+        },
         comments: post.comments.length,
         image_url: extract_image_from_post(post.description),
         created_at: post.created_at
@@ -47,7 +57,12 @@ class PostsController < ApplicationController
       title: @post.title,
       sub_title: @post.sub_title,
       description: @post.description,
-      user: @post.user,
+      author: {
+        id: @post.user.id,
+        email: @post.user.email,
+        display_name: @post.user.display_name,
+        avatar: @post.user.avatar.url
+      },
       comments: @post.comments.length,
       image_url: extract_image_from_post(@post.description),
       created_at: @post.created_at
