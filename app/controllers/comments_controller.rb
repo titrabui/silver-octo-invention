@@ -18,7 +18,12 @@ class CommentsController < ApplicationController
       {
         id: comment.id,
         post_id: comment.post.id,
-        author: comment.user,
+        author: {
+          id: comment.user.id,
+          email: comment.user.email,
+          display_name: comment.user.display_name,
+          avatar: comment.user.avatar.url
+        },
         content: comment.content,
         replies: comment.replies,
         likes: comment.likes,
@@ -38,7 +43,12 @@ class CommentsController < ApplicationController
       { 
         id: comment.id,
         post_id: comment.post.id,
-        author: comment.user,
+        author: {
+          id: comment.user.id,
+          email: comment.user.email,
+          display_name: comment.user.display_name,
+          avatar: comment.user.avatar.url
+        },
         content: comment.content,
         replies: comment.replies,
         likes: comment.likes,

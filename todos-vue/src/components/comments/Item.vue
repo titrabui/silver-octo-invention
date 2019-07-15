@@ -1,11 +1,12 @@
 <template lang="pug">
   el-row
     el-card.box-card(shadow="hover" :body-style="{ padding: '0px' }")
-      el-row.comment-panel-header
-        span.signin-info
-          img.post-user-avatar(src="@/assets/images/avatar_default.png" height="25")
-          span.comment-author-name {{ comment.author.email }}
-          span.time-ago  {{ timesAgo(comment.created_at) }}
+      el-row.comment-header-container
+        el-avatar(v-if="comment.author.avatar" :src="comment.author.avatar" shape="square" :size="30")
+        el-avatar(v-else shape="square" :size="30") {{ (comment.author.display_name && comment.author.display_name.charAt(0).toUpperCase()) || (comment.author.email && comment.author.email.charAt(0).toUpperCase()) }}
+        span.comment-author-name {{ comment.author.display_name || comment.author.email }}
+        el-divider(direction="vertical")
+        span.comment-time-ago  {{ timesAgo(comment.created_at) }}
       el-row(style="padding-left: 20px")
         el-row(style="margin-top: 5px")
           p.comment-content(v-if="!isEditComment" v-html="comment.content")

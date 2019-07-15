@@ -3,13 +3,13 @@
     el-col(:span="12" :offset="6")
       el-card.box-card(:body-style="{ padding: '0px' }" v-if="Object.keys(post).length")
         el-row.box-card-header(:gutter="5")
-          el-col.post-info-container(:span="20")
-            el-avatar(v-if="post.user.url" :src="post.user.url" shape="square" :size="25")
-            el-avatar(v-else shape="square" :size="25") {{ post.user.email.charAt(0).toUpperCase() }}
-            span.post-user-email {{ post.user.email }}
+          el-col.post-info-container(:span="16")
+            el-avatar(v-if="post.author.avatar" :src="post.author.avatar" shape="square" :size="30")
+            el-avatar(v-else shape="square" :size="30") {{ (post.author.display_name && post.author.display_name.charAt(0).toUpperCase()) || (post.author.email && post.author.email.charAt(0).toUpperCase()) }}
+            span.post-user-email {{ post.author.display_name || post.author.email }}
             el-divider(direction="vertical")
             span.post-time-ago posted {{ timesAgo(post.created_at) }}
-          el-col(:span="4" align="right")
+          el-col(:span="8" align="right")
             el-button(v-if="canEditPost()" type="warning" icon="el-icon-edit-outline" round size="mini" @click="editPost()") EDIT
             el-button(type="primary" icon="el-icon-back" round size="mini" @click="backHome()") BACK
         el-row.box-card-body
@@ -87,7 +87,7 @@ export default {
       this.$router.replace(`/news/${this.postId}/edit`)
     },
     canEditPost () {
-      return this.currentUser && this.currentUser.id === this.post.user.id
+      return this.currentUser && this.currentUser.id === this.post.author.id
     },
     fetchComments () {
       this.$http.plain.get(`/comments_by_post`, { params: { post_id: this.postId } })

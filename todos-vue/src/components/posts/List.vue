@@ -4,9 +4,9 @@
       el-card.box-card(v-for="post in posts" :key="post.id" shadow="hover" :body-style="{ padding: '0px' }")
         el-row.box-card-header(:gutter="5")
           el-col.post-info-container(:span="20")
-            el-avatar(v-if="post.user.url" :src="post.user.url" shape="square" :size="25")
-            el-avatar(v-else shape="square" :size="25") {{ post.user.email.charAt(0).toUpperCase() }}
-            span.post-user-email {{ post.user.email }}
+            el-avatar(v-if="post.author.avatar" :src="post.author.avatar" shape="square" :size="30")
+            el-avatar(v-else shape="square" :size="30") {{ (post.author.display_name && post.author.display_name.charAt(0).toUpperCase()) || (post.author.email && post.author.email.charAt(0).toUpperCase()) }}
+            span.post-user-email {{ post.author.display_name || post.author.email }}
             el-divider(direction="vertical")
             span.post-comment
               i.el-icon-chat-dot-square
