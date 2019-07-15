@@ -16,9 +16,10 @@
         el-row(style="padding: 14px 20px")
           el-table(:data="users.filter(data => !search || data.email.toLowerCase().includes(search.toLowerCase())).slice((currentPage - 1) * pageSize, (currentPage - 1) * pageSize + pageSize)" style="width: 100%" empty-text="No data")
             el-table-column(label="User ID" prop="id" width="80")
-            el-table-column(label="Image" width="80")
+            el-table-column(label="Avatar" width="80")
               template(slot-scope="scope")
-                img(src="https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png" style="width: 40px")
+                el-avatar(v-if="scope.row.avatar.url" :src="scope.row.avatar.url" :size="40" shape="square")
+                el-avatar(v-else :size="40" shape="square") {{ scope.row.email.charAt(0).toUpperCase() }}
             el-table-column(label="Email" prop="email" min-width="200")
             el-table-column(label="Role" prop="role" min-width="100")
               template(slot-scope="scope")
@@ -35,7 +36,7 @@
             el-table-column(label="Comments" align="right" min-width="100")
               template(slot-scope="scope")
                 span {{ scope.row.comments }}
-            el-table-column(label="Registered At" min-width="150")
+            el-table-column(label="Registered at" min-width="150" align="right")
               template(slot-scope="scope")
                 span {{ createdAt(scope.row.created_at) }}
             el-table-column(fixed="right" label="Operations" width="120" :align="isManager ? 'center' : 'left'")

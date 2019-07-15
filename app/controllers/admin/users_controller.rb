@@ -14,6 +14,7 @@ class Admin::UsersController < ApplicationController
         role: user.role,
         posts: user.posts.present? ? user.posts.length : 0,
         comments: user.comments.present? ? user.comments.length : 0,
+        avatar: user.avatar,
         created_at: user.created_at
       }
     end

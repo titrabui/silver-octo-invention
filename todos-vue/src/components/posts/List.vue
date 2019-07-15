@@ -1,20 +1,22 @@
 <template lang="pug">
   el-row
     el-col(:span="10" :offset="7")
-      el-card.box-card(v-for="post in posts" :key="post.id" :body-style="{ padding: '0px' }" shadow="hover")
-        el-row.box-card-header
-          span.signin-info
-            img.post-user-avatar(src="@/assets/images/avatar_default.png" height="25")
+      el-card.box-card(v-for="post in posts" :key="post.id" shadow="hover" :body-style="{ padding: '0px' }")
+        el-row.box-card-header(:gutter="5")
+          el-col.post-info-container(:span="20")
+            el-avatar(v-if="post.user.url" :src="post.user.url" shape="square" :size="25")
+            el-avatar(v-else shape="square" :size="25") {{ post.user.email.charAt(0).toUpperCase() }}
             span.post-user-email {{ post.user.email }}
-            span.post-header-comment
-              span {{ ' | '}}
-              <i class="el-icon-chat-dot-square"></i> {{ post.comments }} Comments
-            span.time-ago , posted {{ timesAgo(post.created_at) }}
-          el-button(style="float: right" type="primary" icon="el-icon-circle-plus" round size="mini" @click="showPost(post.id)") JOIN
-        el-row(style="padding: 14px")
+            el-divider(direction="vertical")
+            span.post-comment
+              i.el-icon-chat-dot-square
+              span  {{ post.comments }} comments
+            span.post-time-ago , posted {{ timesAgo(post.created_at) }}
+          el-col(:span="4" align="right")
+            el-button(type="primary" icon="el-icon-circle-plus" round size="mini" @click="showPost(post.id)") JOIN
+        el-row.post-description
           span.post-title {{ post.title }}
-          br
-          span.post-sub-title {{ post.sub_title }}
+          p.post-sub-title {{ post.sub_title }}
         el-row
           img.post-image(:src="post.image_url")
 </template>

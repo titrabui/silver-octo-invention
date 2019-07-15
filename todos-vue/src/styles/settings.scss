@@ -1,0 +1,18 @@
+// Account
+.setting-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.setting-item-label {
+  font-weight: bold;
+  line-height: 25px
+}
+
+.setting-item-description {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: rgb(124, 124, 124);
+}

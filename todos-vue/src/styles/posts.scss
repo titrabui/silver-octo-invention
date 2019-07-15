@@ -1,0 +1,49 @@
+.post-info-container {
+  display: flex;
+  align-items: center;
+}
+.post-user-avatar {
+  margin-right: 5px;
+  border-radius: 50%;
+}
+.post-user-email {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgb(28, 28, 28);
+  line-height: 20px;
+  margin-left: 5px;
+}
+.post-comment {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px;
+  color: rgb(135, 138, 140);
+}
+.post-time-ago {
+  color: rgb(120, 124, 126);
+  font-size: 12px;
+  font-weight: 100;
+}
+.post-description {
+  padding: 20px 15px 10px;
+}
+.post-title {
+  overflow-wrap: break-word;
+  font-size: 30px;
+  font-weight: bold;
+  line-height: 22px;
+}
+.post-sub-title {
+  overflow-wrap: break-word;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22px;
+}
+.post-image {
+  width: 100%;
+}
+
+// Details
+.post-detail-body {
+  padding: 14px 20px;
+}
