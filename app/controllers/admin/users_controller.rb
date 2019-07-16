@@ -14,6 +14,10 @@ class Admin::UsersController < ApplicationController
         role: user.role,
         posts: user.posts.present? ? user.posts.length : 0,
         comments: user.comments.present? ? user.comments.length : 0,
+        display_name: user.display_name,
+        about: user.about,
+        birthday: user.birthday,
+        content_visibility: user.content_visibility,
         avatar: user.avatar,
         created_at: user.created_at
       }

@@ -1,9 +1,4 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import createPersistedState from 'vuex-persistedstate'
-Vue.use(Vuex)
-
-export const store = new Vuex.Store({
+const app = {
   state: {
     currentUser: {},
     signedIn: false,
@@ -55,6 +50,7 @@ export const store = new Vuex.Store({
     updateCurrentUser ({ commit }, currentUser) {
       commit('updateCurrentUser', currentUser)
     }
-  },
-  plugins: [createPersistedState()]
-})
+  }
+}
+
+export default app
