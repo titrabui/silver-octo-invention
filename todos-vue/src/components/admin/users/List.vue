@@ -17,8 +17,15 @@
           el-table-column(label="User ID" prop="id" width="80")
           el-table-column(label="Avatar" width="80" align="center")
             template(slot-scope="scope")
-              el-avatar(v-if="scope.row.avatar.url" :src="scope.row.avatar.url" :size="40" shape="square")
-              el-avatar(v-else :size="40" shape="square") {{ scope.row.email.charAt(0).toUpperCase() }}
+              el-popover(
+                placement="top-start"
+                width="200"
+                trigger="hover"
+                :disabled="scope.row.avatar.url === null"
+                style="padding: 0")
+                el-avatar(:src="scope.row.avatar.url" :size="200" shape="square")
+                el-avatar(v-if="scope.row.avatar.url" slot="reference" :src="scope.row.avatar.url" :size="40" shape="square")
+                el-avatar(v-else slot="reference" :size="40" shape="square") {{ scope.row.email.charAt(0).toUpperCase() }}
           el-table-column(label="Status" width="80" align="center")
             template(slot-scope="scope")
               el-tooltip(:content="scope.row.content_visibility ? 'Active' : 'Deactive'")
