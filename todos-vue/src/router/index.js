@@ -105,7 +105,7 @@ router.beforeEach((to, from, next) => {
   if (requiresAuth) {
     const requiresRoles = to.matched.some(record => record.meta.roles)
 
-    if (!store.state.signedIn) {
+    if (!store.state.app.signedIn) {
       next({
         path: '/signin',
         query: { redirect: to.fullPath }
@@ -113,12 +113,12 @@ router.beforeEach((to, from, next) => {
       Notification({
         title: 'Login required',
         message: 'Please log in to do this',
-        type: 'warning',
+        type: 'error',
         duration: 2000
       })
     } else if (requiresRoles) {
       const roles = to.matched.map(record => record.meta.roles)[0]
-      if (store.state.currentUser && !roles.includes(store.state.currentUser.role)) {
+      if (store.state.app.currentUser && !roles.includes(store.state.app.currentUser.role)) {
         next({
           path: '/',
           query: { redirect: to.fullPath }
