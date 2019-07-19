@@ -1,5 +1,5 @@
 import { securedAxiosInstance } from '@/backend/axios'
-import { errorNotifier } from '@/utils/error'
+import { successNotifier, errorNotifier } from '@/utils/notifier'
 
 const users = {
   namespaced: true,
@@ -14,6 +14,11 @@ const users = {
   mutations: {
     setUsers (state, users) {
       state.users = users
+    },
+    deleteUser (state, userId) {
+      state.users = state.users.filter(item => {
+        return item.id !== userId
+      })
     }
   },
   actions: {
@@ -21,6 +26,14 @@ const users = {
       securedAxiosInstance.get('/admin/users')
         .then(response => { commit('setUsers', response.data) })
         .catch(error => errorNotifier(error, 'Something went wrong'))
+    },
+    deleteUser ({ commit }, userId) {
+      securedAxiosInstance.delete(`admin/users/${userId}`)
+        .then(_ => {
+          commit('deleteUser', userId)
+          successNotifier('', 'Delete completed')
+        })
+        .catch(error => errorNotifier(error, 'Cannot update user'))
     }
   }
 }

@@ -22,7 +22,7 @@
                 width="200"
                 trigger="hover"
                 :disabled="scope.row.avatar.url === null"
-                style="padding: 0")
+                popper-class="avatar-popover")
                 el-avatar(:src="scope.row.avatar.url" :size="200" shape="square")
                 el-avatar(v-if="scope.row.avatar.url" slot="reference" :src="scope.row.avatar.url" :size="40" shape="square")
                 el-avatar(v-else slot="reference" :size="40" shape="square") {{ scope.row.email.charAt(0).toUpperCase() }}
@@ -63,7 +63,7 @@
               el-tooltip(content="View News")
                 el-button(@click="viewUserPost(scope.row.id)" type="success" icon="el-icon-news" circle)
               el-tooltip(content="Delete")
-                el-button(v-if="canDeleteUser(scope.row.id)" @click="deleteUser(scope.row.id)" type="danger" icon="el-icon-delete" circle)
+                el-button(v-if="canDeleteUser(scope.row.id)" @click="removeUser(scope.row.id)" type="danger" icon="el-icon-delete" circle)
       el-row(style="padding: 14px 20px; text-align: center;")
         el-pagination(
           background
@@ -105,7 +105,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      fetchUsers: 'users/fetchUsers'
+      fetchUsers: 'users/fetchUsers',
+      deleteUser: 'users/deleteUser'
     }),
     setError (error, text) {
       this.$notify({
@@ -127,21 +128,13 @@ export default {
       store.commit('setPostManageUserId', { userId: userId })
       this.$router.replace('/news-manage')
     },
-    deleteUser (userId) {
+    removeUser (userId) {
       this.$confirm('This will permanently delete the user. Continue?', 'Warning', {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(() => {
-        this.$http.secured.delete(`/users/${userId}`)
-          .then(response => {
-            this.$notify({
-              type: 'success',
-              message: 'Delete completed'
-            })
-            this.fetchUsers()
-          })
-          .catch(error => this.setError(error, 'Cannot update user'))
+        this.deleteUser(userId)
       }).catch(() => {})
     },
     canDeleteUser (userId) {
@@ -173,9 +166,13 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="css">
   .user-search-input {
     padding: 10px 20px;
     text-align: right;
+  }
+
+  .avatar-popover {
+    padding: 0px !important;
   }
 </style>

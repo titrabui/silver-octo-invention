@@ -1,8 +1,9 @@
 class Admin::UsersController < ApplicationController
   before_action :authorize_access_request!
-  before_action :set_user, only: [:show, :update]
+  before_action :set_user, only: [:show, :update, :destroy]
   VIEW_ROLES = %w[admin manager].freeze
   EDIT_ROLES = %w[admin].freeze
+  DELETE_ROLES = %w[admin].freeze
 
   def index
     @users = User.all
@@ -40,6 +41,14 @@ class Admin::UsersController < ApplicationController
     end
   end
 
+  def destroy
+    if current_user.id != @user.id
+      @user.destroy
+    else
+      render json: { error: 'Admin cannot delete their own account' }, status: :bad_request
+    end
+  end
+
   def token_claims
     {
       aud: allowed_aud,
@@ -50,7 +59,10 @@ class Admin::UsersController < ApplicationController
   private
 
   def allowed_aud
-    action_name == 'update' ? EDIT_ROLES : VIEW_ROLES
+    puts "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA#{action_name}"
+    EDIT_ROLES if action_name == 'update'
+    DELETE_ROLES if action_name == 'destroy'
+    VIEW_ROLES
   end
 
   def set_user

@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   post 'upload', controller: :users, action: :upload
 
   namespace :admin do
-    resources :users, only: [:index, :update]
+    resources :users, only: [:index, :update, :destroy]
   end
 
   resources :password_resets, only: [:create] do
