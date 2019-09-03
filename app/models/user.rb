@@ -6,6 +6,7 @@ class User < ApplicationRecord
   has_many :comments, :dependent => :destroy
 
   enum role: %i[user manager admin].freeze
+  enum provider: %i[sparrow google facebook twitter].freeze
 
   validates :email,
             format: { with: URI::MailTo::EMAIL_REGEXP },
@@ -30,5 +31,14 @@ class User < ApplicationRecord
     self.reset_password_token = nil
     self.reset_password_token_expires_at = nil
     save!
+  end
+
+  # Creates a new user only if it doesn't exist
+  def self.from_omniauth(auth_code:, provider:)
+    where(email: auth.info.email).first_or_initialize do |user|
+      user.email = auth.info.email
+      user.display_name = auth.info.name
+      user.provider = provider
+    end
   end
 end

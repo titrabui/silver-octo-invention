@@ -1,11 +1,8 @@
 <template lang="pug">
-  el-row
-    el-row.banner-image
-      img(style="width: 100%; height: auto;" src="@/assets/images/banner_2.jpg")
-    el-row.page-title
-      span Sign Up
-    el-row(:gutter="20")
-      el-col.signin-form(:span="6" :offset="9")
+  el-dialog(:visible.sync="dialogVisible" width="60%")
+    el-row.signin-container(:gutter="40")
+      el-col.signin-form(:span="12")
+        .signin-dialog-title Sign Up
         el-alert(
           v-if="error"
           :title="error"
@@ -14,15 +11,39 @@
           center
           :closable=false
         )
-        el-form(label-position="top" label-width="100px" size="large")
-          el-form-item(label="Email address")
+        el-form(label-position="top" label-width="100px")
+          el-form-item
+            template(slot="label")
+              .signin-item-label Email address
             el-input(placeholder="Please input email" v-model="email")
-          el-form-item(label="Password")
+          el-form-item
+            template(slot="label")
+              .signin-item-label Password
             el-input(placeholder="Please input password" v-model="password" show-password)
-          el-form-item(label="Password Confirmation")
+          el-form-item
+            template(slot="label")
+              .signin-item-label Confirm Password
             el-input(placeholder="Please input confirm password" v-model="password_confirmation" show-password)
           el-form-item
-            el-button(type="primary" style="width: 100%" round @click="signup()") Sign Up
+            el-button(type="primary" style="width: 100%" round @click="signup()" size="large") Sign Up
+      el-col(:span="12" align="middle")
+        el-form(size="large")
+          el-form-item
+            el-button.btn-signin.btn-google(round @click="signupWithGoogle()")
+              font-awesome-icon(:icon="['fab', 'google']")
+              el-divider(direction="vertical")
+              span Sign up with Google
+          el-form-item
+            el-button.btn-signin.btn-facebook(round @click="signupWithFacebook()")
+              font-awesome-icon(:icon="['fab', 'facebook-f']")
+              el-divider(direction="vertical")
+              span Sign up with Facebook
+          el-form-item
+            el-button.btn-signin.btn-twitter(round @click="signupWithTwitter()")
+              font-awesome-icon(:icon="['fab', 'twitter']")
+              el-divider(direction="vertical")
+              span Sign up with Twitter
+
 </template>
 
 <script>
@@ -33,7 +54,8 @@ export default {
       email: '',
       password: '',
       password_confirmation: '',
-      error: ''
+      error: '',
+      dialogVisible: false
     }
   },
   created () {
@@ -64,7 +86,7 @@ export default {
           type: 'success',
           duration: 2000
         })
-      }).catch(error => this.signinFailed(error))
+      }).catch(error => this.signupFailed(error))
     },
     signupFailed (error) {
       this.error = (error.response && error.response.data && error.response.data.error) || 'Something went wrong'
@@ -74,6 +96,24 @@ export default {
       if (this.$store.state.signedIn) {
         this.$router.replace('/')
       }
+    },
+    authorizationCode (authCode, provider) {
+      this.$http.plain.post('/oauth/google', { auth_code: authCode, provider: provider })
+        .then(response => this.signupSuccessful(response))
+        .catch(error => this.signupFailed(error))
+    },
+    signupWithGoogle () {
+      this.$gAuth.getAuthCode()
+        .then(authCode => {
+          this.authorizationCode(authCode, 'google')
+        })
+        .catch(error => this.signupFailed(error))
+    },
+    signupWithFacebook () {
+
+    },
+    signupWithTwitter () {
+
     }
   }
 }

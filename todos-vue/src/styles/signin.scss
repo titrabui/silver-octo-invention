@@ -1,0 +1,39 @@
+.signin-container {
+  padding-left: 20px;
+}
+.signin-dialog-title {
+  font-weight: bold;
+  font-size: 33px;
+  margin-bottom: 10px;
+}
+.signin-form {
+  border-right: 1px solid #DCDFE6;
+}
+.signin-item-label {
+  font-weight: bold
+}
+.btn-signin {
+  color: white;
+  width: 80%;
+  &:hover {
+    color: white;
+  }
+}
+.btn-google {
+  background-color: #DD4B39;
+  &:hover {
+    background-color: #dd4b39a3;
+  }
+}
+.btn-facebook {
+  background-color: #4267b2;
+  &:hover {
+    background-color: #4267b2b5;
+  }
+}
+.btn-twitter {
+  background-color: #55ACEE;
+  &:hover {
+    background-color: #55acee9c;
+  }
+}
