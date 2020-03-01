@@ -34,11 +34,13 @@ class User < ApplicationRecord
   end
 
   # Creates a new user only if it doesn't exist
-  def self.from_omniauth(auth_code:, provider:)
-    where(email: auth.info.email).first_or_initialize do |user|
-      user.email = auth.info.email
-      user.display_name = auth.info.name
-      user.provider = provider
+  def self.from_oauth(oauth_user:, provider:)
+    where(email: oauth_user.email).first_or_create! do |user|
+      user.email             = oauth_user.email
+      user.display_name      = oauth_user.name
+      user.password          = SecureRandom.urlsafe_base64
+      user.provider          = provider
+      user.remote_avatar_url = oauth_user.picture
     end
   end
 end

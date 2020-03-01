@@ -10,6 +10,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import CKEditor from '@ckeditor/ckeditor5-vue'
 import GAuth from 'vue-google-oauth2'
+import gauthOptions from './utils/googleAuth'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 import { fab } from '@fortawesome/free-brands-svg-icons'
@@ -25,12 +26,7 @@ Vue.use(ElementUI, { size: 'small', zIndex: 3000 })
 Vue.use(CKEditor)
 
 /* Google OAuth2 */
-const gauthOption = {
-  clientId: '496834929234-3m4qiabe2js95a50sil960d0oct2b3er.apps.googleusercontent.com',
-  scope: 'profile email',
-  prompt: 'select_account'
-}
-Vue.use(GAuth, gauthOption)
+Vue.use(GAuth, gauthOptions)
 
 /* font-awesome */
 library.add(faBars, fab)

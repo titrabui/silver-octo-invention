@@ -16,7 +16,7 @@ gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'
 gem 'jwt_sessions', '~> 2'
-gem 'oauth2', '~> 1.2'
+gem 'google-api-client', '~> 0.34'
 
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
@@ -31,7 +31,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'rack-cors'
 
 gem 'acts_as_tree', '~> 2.4'
-gem 'carrierwave', '>= 2.0.0.rc', '< 3.0'
+gem 'carrierwave', '~> 2.0'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

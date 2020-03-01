@@ -32,7 +32,7 @@
               el-dropdown-item(command="settings" icon="el-icon-s-tools") Settings
               el-dropdown-item(command="signout" icon="el-icon-back") Log Out
         div(v-else)
-          el-button(@click="redirectToPage('signin')" icon="el-icon-thumb" round) LOG IN
+          el-button(@click="openDialog('signin')" icon="el-icon-thumb" round) LOG IN
           el-button(@click="openDialog('signup')" icon="el-icon-position" round type="primary") SIGN UP
           el-dropdown(@command="handleCommand" style="margin-left: 10px; vertical-align: middle;")
             el-button(round)
@@ -41,17 +41,17 @@
                 <i class="el-icon-caret-bottom el-icon--right"></i>
             el-dropdown-menu(slot="dropdown")
               el-dropdown-item(command="signin" icon="el-icon-thumb") Log In / Sign Up
-    signUp(ref="signup")
+    SignForm(ref="signForm" :sign-type="signFormType")
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import signUp from './Signup'
+import SignForm from './SignForm'
 
 export default {
   name: 'AppHeader',
   components: {
-    signUp
+    SignForm
   },
   computed: {
     ...mapGetters({
@@ -63,7 +63,8 @@ export default {
   },
   data () {
     return {
-      newsSearch: ''
+      newsSearch: '',
+      signFormType: 'in'
     }
   },
   methods: {
@@ -85,13 +86,14 @@ export default {
       this.$router.replace(`/${route}`)
     },
     openDialog (ref) {
-      this.$refs[ref].dialogVisible = true
+      this.signFormType = ref.replace('sign', '')
+      this.$refs.signForm.dialogVisible = true
     },
     handleCommand (command) {
       if (command === 'signout') {
         this.signOut()
       } else {
-        this.redirectToPage(command)
+        this.openDialog(command)
       }
     }
   }
