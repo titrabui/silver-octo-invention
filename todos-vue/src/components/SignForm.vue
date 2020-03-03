@@ -72,8 +72,8 @@ export default {
   methods: {
     signin () {
       this.$http.plain.post('/signin', { email: this.email, password: this.password })
-        .then(response => this.signinSuccessful(response))
-        .catch(error => this.signinFailed(error))
+        .then(response => this.signSuccessful(response))
+        .catch(error => this.signFailed(error))
     },
     signup () {
       this.$http.plain.post('/signup', { email: this.email, password: this.password, password_confirmation: this.password_confirmation })
@@ -86,6 +86,7 @@ export default {
         return
       }
       console.log(response.data.csrf)
+      this.dialogVisible = false
       this.$http.plain.get('/me').then(meResponse => {
         this.$store.commit('setCurrentUser', { currentUser: meResponse.data, csrf: response.data.csrf })
         this.error = ''
